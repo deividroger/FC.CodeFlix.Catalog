@@ -1,6 +1,8 @@
-﻿namespace FC.CodeFlix.Catalog.Application.UseCases.Category.CreateCategory;
+﻿using MediatR;
 
-public class CreateCategoryInput
+namespace FC.CodeFlix.Catalog.Application.UseCases.Category.CreateCategory;
+
+public class CreateCategoryInput : IRequest<CreateCategoryOutput>
 {
     public CreateCategoryInput(string name, string? description = null, bool isActive = true)
     {

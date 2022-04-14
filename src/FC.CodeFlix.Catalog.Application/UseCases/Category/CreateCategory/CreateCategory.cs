@@ -24,10 +24,6 @@ public class CreateCategory : ICreateCategory
         await _categoryRepository.Insert(category, cancellationToken);
         await _unitOfWork.Commit(cancellationToken);
 
-        return new CreateCategoryOutput(category.Id,
-                                            category.Name,
-                                            category.Description,
-                                            category.CreatedAt,
-                                            category.IsActive);
+        return CreateCategoryOutput.FromCategory(category);
     }
 }
