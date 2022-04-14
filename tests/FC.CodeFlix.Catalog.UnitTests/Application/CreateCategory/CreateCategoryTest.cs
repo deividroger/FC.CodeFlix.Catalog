@@ -111,10 +111,12 @@ public class CreateCategoryTest
 
     }
 
-    [Theory(DisplayName = nameof(ThrowWhenCantInstantiateAggregate))]
+    [Theory(DisplayName = nameof(ThrowWhenCantInstantiateCategory))]
     [Trait("Application", "CreateCategory - Use Cases")]
-    [MemberData(nameof(GetInvalidInputs))]
-    public async void ThrowWhenCantInstantiateAggregate(CreateCategoryInput input,string exceptionMessage)
+    [MemberData(nameof(CreateCategoryTestDataGenerator.GetInvalidInputs),
+        parameters: 24,
+        MemberType = typeof(CreateCategoryTestDataGenerator))]
+    public async void ThrowWhenCantInstantiateCategory(CreateCategoryInput input,string exceptionMessage)
     {
         var useCase = new UseCases.CreateCategory(_fixture.GetRepositoryMock().Object,
                                                  _fixture.GetUnitOfWorkMock().Object);
@@ -123,35 +125,6 @@ public class CreateCategoryTest
 
        await task.Should().ThrowAsync<EntityValidationException>()
             .WithMessage(exceptionMessage);
-    }
-
-    private static IEnumerable<object[]> GetInvalidInputs()
-    {
-        var fixture = new CreateCategoryTestFixture();
-
-        var invalidInputList = new List<object[]>();
-
-        var invalidInputShortName = fixture.GetInput();
-        invalidInputShortName.Name = invalidInputShortName.Name.Substring(0, 2);
-        invalidInputList.Add(new object[] { invalidInputShortName, "Name should be at least 3 characters long" });
-
-
-        var invalidInputTooLongName = fixture.GetInput();
-        invalidInputTooLongName.Name = fixture.Faker.Lorem.Letter(256);
-        invalidInputList.Add(new object[] { invalidInputTooLongName, "Name should be less or equal 255 characters long" });
-
-
-        var invalidInputDescriptionNull = fixture.GetInput();
-        invalidInputDescriptionNull.Description = null!;
-        invalidInputList.Add(new object[] { invalidInputDescriptionNull, "Description should not be null" });
-
-
-        var invalidInputTooLongDescription = fixture.GetInput();
-        invalidInputTooLongDescription.Description = fixture.Faker.Lorem.Letter(10_001);
-        invalidInputList.Add(new object[] { invalidInputTooLongDescription, "Description should be less or equal 10000 characters long" });
-
-
-        return invalidInputList;
     }
 
 }
