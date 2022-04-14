@@ -1,8 +1,9 @@
-﻿namespace FC.CodeFlix.Catalog.Application.UseCases.Category.CreateCategory;
-using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
-public class CreateCategoryOutput
+﻿using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
+namespace FC.CodeFlix.Catalog.Application.UseCases.Category.Common;
+
+public class CategoryModelOutput
 {
-    public CreateCategoryOutput(Guid id, string name, string description, DateTime createdAt, bool isActive = true)
+    public CategoryModelOutput(Guid id, string name, string description, DateTime createdAt, bool isActive = true)
     {
         Name = name;
         Id = id;
@@ -22,11 +23,12 @@ public class CreateCategoryOutput
 
     public bool IsActive { get; set; }
 
-    public static CreateCategoryOutput FromCategory(DomainEntity.Category category)
-     => new CreateCategoryOutput(category.Id,
+    public static CategoryModelOutput FromCategory(DomainEntity.Category category)
+     => new(category.Id,
                                             category.Name,
                                             category.Description,
                                             category.CreatedAt,
                                             category.IsActive);
-
 }
+
+
