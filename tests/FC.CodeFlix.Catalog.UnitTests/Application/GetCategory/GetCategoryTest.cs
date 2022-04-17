@@ -56,7 +56,7 @@ public class GetCategoryTest
         repositoryMock.Setup(x => x.Get(
                     It.IsAny<Guid>(),
                     It.IsAny<CancellationToken>()
-                    )).ThrowsAsync(new NotFoundExcetion($"Category '{exampleGuid}' not found"));
+                    )).ThrowsAsync(new NotFoundException($"Category '{exampleGuid}' not found"));
 
         var input = new UseCase.GetCategoryInput(exampleGuid);
 
@@ -64,7 +64,7 @@ public class GetCategoryTest
 
         var task = async () => await useCase.Handle(input, CancellationToken.None);
 
-      await  task.Should().ThrowAsync<NotFoundExcetion>();
+      await  task.Should().ThrowAsync<NotFoundException>();
 
         repositoryMock.Verify(x => x.Get(It.IsAny<Guid>(),
                                         It.IsAny<CancellationToken>()),
