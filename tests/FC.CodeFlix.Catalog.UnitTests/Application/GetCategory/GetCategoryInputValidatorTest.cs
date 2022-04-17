@@ -36,7 +36,7 @@ public class GetCategoryInputValidatorTest
         var invalidInput = new GetCategoryInput(Guid.Empty);
 
         var validator = new GetCategoryInputValidator();
-
+            
         var validationResult = validator.Validate(invalidInput);
 
         validationResult.Should().NotBeNull();  
