@@ -5,7 +5,7 @@ namespace FC.CodeFlix.Catalog.Application.UseCases.Category.UpdateCategory;
 
 public class UpdateCategoryInput : IRequest<CategoryModelOutput>
 {
-    public UpdateCategoryInput(Guid id, string name, string description, bool isActive)
+    public UpdateCategoryInput(Guid id, string name, string? description = null, bool? isActive = null)
     {
         Id = id;
         Name = name;
@@ -17,8 +17,8 @@ public class UpdateCategoryInput : IRequest<CategoryModelOutput>
 
     public string Name { get; private set; }
 
-    public string Description {  get; private set; }
+    public string? Description {  get; private set; }
 
-    public bool IsActive { get; private set; }
+    public bool? IsActive { get; private set; }
 
 }
