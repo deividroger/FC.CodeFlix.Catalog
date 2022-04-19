@@ -46,7 +46,8 @@ public class UpdateCategoryTestFixture : BaseFixture
     public bool GetRandomBoolean()
         => (new Random().NextDouble()) < 0.5;
 
-
+    public Category GetExampleCategory()
+        => new(GetValidCategoryName(), GetValidCategoryDescription(), GetRandomBoolean());
 
     public UpdateCategoryInput GetInvalidInputShortName()
     {
@@ -81,8 +82,7 @@ public class UpdateCategoryTestFixture : BaseFixture
             GetValidCategoryDescription(),
             GetRandomBoolean());
 
-    public Category GetExampleCategory()
-        => new(GetValidCategoryName(), GetValidCategoryDescription(), GetRandomBoolean());
+    
 
     public Mock<ICategoryRepository> GetRepositoryMock() => new();
 
