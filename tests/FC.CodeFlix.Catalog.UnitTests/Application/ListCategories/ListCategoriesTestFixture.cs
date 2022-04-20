@@ -1,5 +1,7 @@
-﻿using FC.CodeFlix.Catalog.Domain.Entity;
+﻿using FC.CodeFlix.Catalog.Application.UseCases.Category.ListCategories;
+using FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.Repository;
+using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.CodeFlix.Catalog.UnitTests.Common;
 using Moq;
 using System;
@@ -45,14 +47,28 @@ public class ListCategoriesTestFixture : BaseFixture
 
     public List<Category> GetExampleCategoriesList(int length = 10)
     {
-        var list =  new List<Category>();
+        var list = new List<Category>();
 
-        for(int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++)
         {
             list.Add(GetExampleCategory());
         }
         return list;
     }
+
+    public ListCategoriesInput GetExampleInput()
+    {
+        var random = new Random();
+
+        return new(
+                 page: random.Next(1, 10),
+                 perPage: random.Next(15, 100),
+                 search: Faker.Commerce.ProductName(),
+                 sort: Faker.Commerce.ProductName(),
+                 dir: random.Next(0, 10) > 5 ? SearchOrder.ASC : SearchOrder.DESC
+             );
+    }
+
 
     public bool GetRandomBoolean()
         => (new Random().NextDouble()) < 0.5;
