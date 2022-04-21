@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 using Xunit;
 using UsesCase = FC.CodeFlix.Catalog.Application.UseCases.Category.DeleteCategory;
 
-namespace FC.CodeFlix.Catalog.UnitTests.Application.DeleteCategory;
+namespace FC.CodeFlix.Catalog.UnitTests.Application.Category.DeleteCategory;
 
 [Collection(nameof(DeleteCategoryTestFixture))]
 public class DeleteCategoryTest
@@ -59,7 +59,7 @@ public class DeleteCategoryTest
         var task = async () => await useCase.Handle(input, CancellationToken.None);
 
         await task.Should().ThrowAsync<NotFoundException>();
-        
+
         repositoryMock.Verify(x => x.Get(exampleGuid, It.IsAny<CancellationToken>()), Times.Once);
 
     }

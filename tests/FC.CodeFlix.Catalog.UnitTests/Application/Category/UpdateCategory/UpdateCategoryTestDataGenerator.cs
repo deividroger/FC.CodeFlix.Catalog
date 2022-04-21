@@ -1,7 +1,6 @@
-﻿using FC.CodeFlix.Catalog.Application.UseCases.Category.UpdateCategory;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace FC.CodeFlix.Catalog.UnitTests.Application.UpdateCategory;
+namespace FC.CodeFlix.Catalog.UnitTests.Application.Category.UpdateCategory;
 
 public class UpdateCategoryTestDataGenerator
 {

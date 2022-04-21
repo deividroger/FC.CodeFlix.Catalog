@@ -1,6 +1,6 @@
 ﻿using FC.CodeFlix.Catalog.Application.Exceptions;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.UpdateCategory;
-using FC.CodeFlix.Catalog.Domain.Entity;
+using DomainEntity =  FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.Exceptions;
 using FluentAssertions;
 using Moq;
@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 using Xunit;
 using UseCase = FC.CodeFlix.Catalog.Application.UseCases.Category.UpdateCategory;
 
-namespace FC.CodeFlix.Catalog.UnitTests.Application.UpdateCategory;
+namespace FC.CodeFlix.Catalog.UnitTests.Application.Category.UpdateCategory;
 
 [Collection(nameof(UpdateCategoryTestFixture))]
 public class UpdateCategoryTest
@@ -25,8 +25,8 @@ public class UpdateCategoryTest
     [MemberData(nameof(UpdateCategoryTestDataGenerator.GetCategoriesToUpdate),
         parameters: 10,
         MemberType = typeof(UpdateCategoryTestDataGenerator))]
-    public async Task UpdateCategory(Category exampleCategory,
-                                    UseCase.UpdateCategoryInput input)
+    public async Task UpdateCategory(DomainEntity.Category exampleCategory,
+                                    UpdateCategoryInput input)
     {
         var repositoryMock = _fixture.GetRepositoryMock();
         var unitOfWork = _fixture.GetUnitOfWorkMock();
@@ -86,8 +86,8 @@ public class UpdateCategoryTest
     [MemberData(nameof(UpdateCategoryTestDataGenerator.GetCategoriesToUpdate),
        parameters: 10,
        MemberType = typeof(UpdateCategoryTestDataGenerator))]
-    public async Task UpdateCategoryWithoutProvidingIsActive(Category exampleCategory,
-                                   UseCase.UpdateCategoryInput exampleInput)
+    public async Task UpdateCategoryWithoutProvidingIsActive(DomainEntity.Category exampleCategory,
+                                   UpdateCategoryInput exampleInput)
     {
 
         var input = new UpdateCategoryInput(
@@ -128,8 +128,8 @@ public class UpdateCategoryTest
     [MemberData(nameof(UpdateCategoryTestDataGenerator.GetCategoriesToUpdate),
    parameters: 10,
    MemberType = typeof(UpdateCategoryTestDataGenerator))]
-    public async Task UpdateCategoryOnlyName(Category exampleCategory,
-                               UseCase.UpdateCategoryInput exampleInput)
+    public async Task UpdateCategoryOnlyName(DomainEntity.Category exampleCategory,
+                               UpdateCategoryInput exampleInput)
     {
 
         var input = new UpdateCategoryInput(
@@ -165,7 +165,7 @@ public class UpdateCategoryTest
 
     [Theory(DisplayName = nameof(ThrownWhenCantUpateCategory))]
     [Trait("Application", "Update category - Use Cases")]
-    [MemberData(nameof(UpdateCategoryTestDataGenerator.GetInvalidInputs), 
+    [MemberData(nameof(UpdateCategoryTestDataGenerator.GetInvalidInputs),
         parameters: 12,
         MemberType = typeof(UpdateCategoryTestDataGenerator))]
     public async void ThrownWhenCantUpateCategory(UpdateCategoryInput input, string expectedExceptionMessage)

@@ -1,12 +1,12 @@
 ﻿using FC.CodeFlix.Catalog.Application.UseCases.Category.ListCategories;
-using FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
-using FC.CodeFlix.Catalog.UnitTests.Application.Common;
+using FC.CodeFlix.Catalog.UnitTests.Application.Category.Common;
 using System;
 using System.Collections.Generic;
 using Xunit;
+using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
 
-namespace FC.CodeFlix.Catalog.UnitTests.Application.ListCategories;
+namespace FC.CodeFlix.Catalog.UnitTests.Application.Category.ListCategories;
 
 [CollectionDefinition(nameof(ListCategoriesTestFixture))]
 public class ListCategoriesTestFixtureCollection : ICollectionFixture<ListCategoriesTestFixture>
@@ -18,9 +18,9 @@ public class ListCategoriesTestFixture : CategoryUseCasesBaseFixture
 {
 
 
-    public List<Category> GetExampleCategoriesList(int length = 10)
+    public List<DomainEntity.Category> GetExampleCategoriesList(int length = 10)
     {
-        var list = new List<Category>();
+        var list = new List<DomainEntity.Category>();
 
         for (int i = 0; i < length; i++)
         {

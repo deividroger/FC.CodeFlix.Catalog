@@ -1,8 +1,7 @@
 ﻿using FC.CodeFlix.Catalog.Application.UseCases.Category.ListCategories;
-using System.Collections;
 using System.Collections.Generic;
 
-namespace FC.CodeFlix.Catalog.UnitTests.Application.ListCategories;
+namespace FC.CodeFlix.Catalog.UnitTests.Application.Category.ListCategories;
 
 public class ListCategoriesTestDataGenerator
 {
@@ -17,38 +16,38 @@ public class ListCategoriesTestDataGenerator
             switch (i % 7)
             {
                 case 0:
-                    yield return new object[] {  
+                    yield return new object[] {
                         new ListCategoriesInput()
                     };
-                     break;
+                    break;
                 case 1:
-                    yield return new object[] { 
-                        new ListCategoriesInput(inputExample.Page) 
+                    yield return new object[] {
+                        new ListCategoriesInput(inputExample.Page)
                     };
                     break;
                 case 3:
-                    yield return new object[] { 
-                        new ListCategoriesInput(inputExample.Page, 
+                    yield return new object[] {
+                        new ListCategoriesInput(inputExample.Page,
                                                 inputExample.PerPage) };
                     break;
 
                 case 4:
                     yield return new object[] {
-                        new ListCategoriesInput(inputExample.Page, 
+                        new ListCategoriesInput(inputExample.Page,
                                                 inputExample.PerPage,
                                                 inputExample.Search) };
                     break;
 
                 case 5:
                     yield return new object[] {
-                        new ListCategoriesInput(inputExample.Page, 
+                        new ListCategoriesInput(inputExample.Page,
                                                 inputExample.PerPage,
-                                                inputExample.Search, 
+                                                inputExample.Search,
                                                 inputExample.Sort) };
                     break;
                 case 6:
                     yield return new object[] {
-                        inputExample 
+                        inputExample
                     };
                     break;
 

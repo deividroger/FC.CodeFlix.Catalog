@@ -1,5 +1,5 @@
 ﻿using FC.CodeFlix.Catalog.Application.UseCases.Category.Common;
-using FC.CodeFlix.Catalog.Domain.Entity;
+using DomainEntity =  FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
 using FluentAssertions;
 using Moq;
@@ -10,7 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using UseCase = FC.CodeFlix.Catalog.Application.UseCases.Category.ListCategories;
-namespace FC.CodeFlix.Catalog.UnitTests.Application.ListCategories;
+namespace FC.CodeFlix.Catalog.UnitTests.Application.Category.ListCategories;
 
 [Collection(nameof(ListCategoriesTestFixture))]
 public class ListCategoriesTest
@@ -30,7 +30,7 @@ public class ListCategoriesTest
 
         var input = _fixture.GetExampleInput();
 
-        var outputRepositorySearch = new SearchOutput<Category>(
+        var outputRepositorySearch = new SearchOutput<DomainEntity.Category>(
                currentPage: input.Page,
                perPage: input.PerPage,
                items: categoriesExampleList.AsReadOnly(),
@@ -97,8 +97,8 @@ public class ListCategoriesTest
 
         var repositoryMock = _fixture.GetRepositoryMock();
 
-        
-        var outputRepositorySearch = new SearchOutput<Category>(
+
+        var outputRepositorySearch = new SearchOutput<DomainEntity.Category>(
                currentPage: input.Page,
                perPage: input.PerPage,
                items: categoriesExampleList.AsReadOnly(),
@@ -161,10 +161,10 @@ public class ListCategoriesTest
 
         var input = _fixture.GetExampleInput();
 
-        var outputRepositorySearch = new SearchOutput<Category>(
+        var outputRepositorySearch = new SearchOutput<DomainEntity.Category>(
                currentPage: input.Page,
                perPage: input.PerPage,
-               items: new List<Category>().AsReadOnly(),
+               items: new List<DomainEntity.Category>().AsReadOnly(),
                total: 0
             );
 
@@ -188,11 +188,11 @@ public class ListCategoriesTest
         output.Should().NotBeNull();
         output.Page.Should().Be(outputRepositorySearch.CurrentPage);
         output.PerPage.Should().Be(outputRepositorySearch.PerPage);
-        
+
         output.Total.Should().Be(0);
 
         output.Items.Should().HaveCount(0);
-   
+
         repositoryMock.Verify(x => x.Search(
                 It.Is<SearchInput>(
                     searchInput =>

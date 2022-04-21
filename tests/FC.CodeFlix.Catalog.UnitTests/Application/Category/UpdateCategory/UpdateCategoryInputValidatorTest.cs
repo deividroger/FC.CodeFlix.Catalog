@@ -2,7 +2,8 @@
 using Xunit;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.UpdateCategory;
 using FluentAssertions;
-namespace FC.CodeFlix.Catalog.UnitTests.Application.UpdateCategory;
+
+namespace FC.CodeFlix.Catalog.UnitTests.Application.Category.UpdateCategory;
 
 [Collection(nameof(UpdateCategoryTestFixture))]
 public class UpdateCategoryInputValidatorTest

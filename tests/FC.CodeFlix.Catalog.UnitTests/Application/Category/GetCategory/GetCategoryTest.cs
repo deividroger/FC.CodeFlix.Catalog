@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 using UseCase = FC.CodeFlix.Catalog.Application.UseCases.Category.GetCategory;
-namespace FC.CodeFlix.Catalog.UnitTests.Application.GetCategory;
+namespace FC.CodeFlix.Catalog.UnitTests.Application.Category.GetCategory;
 
 [Collection(nameof(GetCategoryTestFixture))]
 public class GetCategoryTest
@@ -17,7 +17,7 @@ public class GetCategoryTest
         => _fixture = fixture;
 
     [Fact(DisplayName = nameof(GetCategory))]
-    [Trait("Application","GetCategory - Use cases")]
+    [Trait("Application", "GetCategory - Use cases")]
     public async Task GetCategory()
     {
         var repositoryMock = _fixture.GetRepositoryMock();
@@ -35,7 +35,7 @@ public class GetCategoryTest
         var output = await useCase.Handle(input, CancellationToken.None);
 
         repositoryMock.Verify(x => x.Get(It.IsAny<Guid>(),
-                                        It.IsAny<CancellationToken>()), 
+                                        It.IsAny<CancellationToken>()),
                                         Times.Once);
 
         output.Should().NotBeNull();
@@ -64,7 +64,7 @@ public class GetCategoryTest
 
         var task = async () => await useCase.Handle(input, CancellationToken.None);
 
-      await  task.Should().ThrowAsync<NotFoundException>();
+        await task.Should().ThrowAsync<NotFoundException>();
 
         repositoryMock.Verify(x => x.Get(It.IsAny<Guid>(),
                                         It.IsAny<CancellationToken>()),

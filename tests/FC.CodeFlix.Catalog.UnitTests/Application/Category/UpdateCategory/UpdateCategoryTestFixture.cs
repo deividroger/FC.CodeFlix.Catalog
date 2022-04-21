@@ -1,9 +1,9 @@
 ﻿using FC.CodeFlix.Catalog.Application.UseCases.Category.UpdateCategory;
-using FC.CodeFlix.Catalog.UnitTests.Application.Common;
+using FC.CodeFlix.Catalog.UnitTests.Application.Category.Common;
 using System;
 using Xunit;
 
-namespace FC.CodeFlix.Catalog.UnitTests.Application.UpdateCategory;
+namespace FC.CodeFlix.Catalog.UnitTests.Application.Category.UpdateCategory;
 
 
 [CollectionDefinition(nameof(UpdateCategoryTestFixture))]
@@ -14,7 +14,7 @@ public class UpdateCategoryTestFixtureCollection : ICollectionFixture<UpdateCate
 
 public class UpdateCategoryTestFixture : CategoryUseCasesBaseFixture
 {
- 
+
     public UpdateCategoryInput GetInvalidInputShortName()
     {
         var invalidInputShortName = GetValidInput();

@@ -1,13 +1,13 @@
 ﻿using FC.CodeFlix.Catalog.Application.Interfaces;
-using FC.CodeFlix.Catalog.Domain.Entity;
+using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.Repository;
 using FC.CodeFlix.Catalog.UnitTests.Common;
 using Moq;
 using System;
 
-namespace FC.CodeFlix.Catalog.UnitTests.Application.Common;
+namespace FC.CodeFlix.Catalog.UnitTests.Application.Category.Common;
 
-public abstract class CategoryUseCasesBaseFixture: BaseFixture
+public abstract class CategoryUseCasesBaseFixture : BaseFixture
 {
     public Mock<ICategoryRepository> GetRepositoryMock() => new();
 
@@ -39,8 +39,8 @@ public abstract class CategoryUseCasesBaseFixture: BaseFixture
     }
 
     public bool GetRandomBoolean()
-        => (new Random().NextDouble()) < 0.5;
+        => new Random().NextDouble() < 0.5;
 
-    public Category GetExampleCategory()
-        => new(GetValidCategoryName(), GetValidCategoryDescription(),GetRandomBoolean());
+    public DomainEntity.Category GetExampleCategory()
+        => new(GetValidCategoryName(), GetValidCategoryDescription(), GetRandomBoolean());
 }
