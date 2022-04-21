@@ -1,11 +1,11 @@
-﻿using FluentAssertions;
+﻿using FC.CodeFlix.Catalog.Application.Exceptions;
+using FluentAssertions;
 using Moq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
-using UseCase =  FC.CodeFlix.Catalog.Application.UseCases.Category.GetCategory;
-using  FC.CodeFlix.Catalog.Application.Exceptions;
+using UseCase = FC.CodeFlix.Catalog.Application.UseCases.Category.GetCategory;
 namespace FC.CodeFlix.Catalog.UnitTests.Application.GetCategory;
 
 [Collection(nameof(GetCategoryTestFixture))]
@@ -21,7 +21,7 @@ public class GetCategoryTest
     public async Task GetCategory()
     {
         var repositoryMock = _fixture.GetRepositoryMock();
-        var exampleCategory = _fixture.GetValidCategory();
+        var exampleCategory = _fixture.GetExampleCategory();
 
         repositoryMock.Setup(x => x.Get(
                     It.IsAny<Guid>(),

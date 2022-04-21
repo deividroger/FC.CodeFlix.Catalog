@@ -2,7 +2,6 @@
 using FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
 using FluentAssertions;
-using Lw.Collections.Generic;
 using Moq;
 using System;
 using System.Collections.Generic;
