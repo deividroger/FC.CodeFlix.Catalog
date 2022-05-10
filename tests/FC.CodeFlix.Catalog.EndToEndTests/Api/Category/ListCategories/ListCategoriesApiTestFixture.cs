@@ -1,19 +1,18 @@
-﻿using FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Category.Common;
-using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
+﻿using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
+using FC.CodeFlix.Catalog.EndToEndTests.Api.Category.Common;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
+using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
+namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Category.ListCategories;
 
-namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Category.ListCategories;
-
-[CollectionDefinition(nameof(ListCategoriesTestFixture))]
-public class ListCategoriesTestFixtureCollection : ICollectionFixture<ListCategoriesTestFixture>
+[CollectionDefinition(nameof(ListCategoriesApiTestFixture))]
+public class ListCategoriesApiTestFixtureCollection: ICollectionFixture<ListCategoriesApiTestFixture>
 {
 
 }
 
-public class ListCategoriesTestFixture : CategoryUseCasesBaseFixture
+public class ListCategoriesApiTestFixture: CategoryBaseFixture
 {
     public List<DomainEntity.Category> GetExampleCategoriesListWithNames(List<string> names)
         => names.Select(name =>
@@ -40,6 +39,7 @@ public class ListCategoriesTestFixture : CategoryUseCasesBaseFixture
             _ => listClone.OrderBy(x => x.Name),
         };
 
-       return orderedEnumerable.ThenBy(x=>x.CreatedAt).ToList();
+        return orderedEnumerable.ThenBy(x => x.CreatedAt).ToList();
     }
+
 }

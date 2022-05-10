@@ -11,11 +11,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.CodeFlix.Catalog.UnitTes
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.CodeFlix.Catalog.Domain", "src\FC.CodeFlix.Catalog.Domain\FC.CodeFlix.Catalog.Domain.csproj", "{AD3DD0C4-443D-42EB-982E-BD5461417BB1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FC.CodeFlix.Catalog.Application", "src\FC.CodeFlix.Catalog.Application\FC.CodeFlix.Catalog.Application.csproj", "{E04C56AC-EE15-4B78-B965-1AA6825A8561}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.CodeFlix.Catalog.Application", "src\FC.CodeFlix.Catalog.Application\FC.CodeFlix.Catalog.Application.csproj", "{E04C56AC-EE15-4B78-B965-1AA6825A8561}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FC.CodeFlix.Catalog.IntegrationTests", "tests\FC.CodeFlix.Catalog.IntegrationTests\FC.CodeFlix.Catalog.IntegrationTests.csproj", "{AD5F4C94-1FB3-4F1C-BFD3-0AC8336419AE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.CodeFlix.Catalog.IntegrationTests", "tests\FC.CodeFlix.Catalog.IntegrationTests\FC.CodeFlix.Catalog.IntegrationTests.csproj", "{AD5F4C94-1FB3-4F1C-BFD3-0AC8336419AE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FC.CodeFlix.Catalog.Infra.Data.EF", "src\FC.CodeFlix.Catalog.Infra.Data.EF\FC.CodeFlix.Catalog.Infra.Data.EF.csproj", "{C2ECBC2D-164F-44FF-86A4-60E6650D1C5D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.CodeFlix.Catalog.Infra.Data.EF", "src\FC.CodeFlix.Catalog.Infra.Data.EF\FC.CodeFlix.Catalog.Infra.Data.EF.csproj", "{C2ECBC2D-164F-44FF-86A4-60E6650D1C5D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FC.CodeFlix.Catalog.EndToEndTests", "tests\FC.CodeFlix.Catalog.EndToEndTests\FC.CodeFlix.Catalog.EndToEndTests.csproj", "{8531216D-9B47-49DB-A057-E4356FDAD5D2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FC.CodeFlix.Catalog.Api", "src\FC.CodeFlix.Catalog.Api\FC.CodeFlix.Catalog.Api.csproj", "{56B3A6AA-2DF4-4B26-B785-0E5E8B879D5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +47,14 @@ Global
 		{C2ECBC2D-164F-44FF-86A4-60E6650D1C5D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C2ECBC2D-164F-44FF-86A4-60E6650D1C5D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C2ECBC2D-164F-44FF-86A4-60E6650D1C5D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8531216D-9B47-49DB-A057-E4356FDAD5D2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8531216D-9B47-49DB-A057-E4356FDAD5D2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8531216D-9B47-49DB-A057-E4356FDAD5D2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8531216D-9B47-49DB-A057-E4356FDAD5D2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56B3A6AA-2DF4-4B26-B785-0E5E8B879D5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56B3A6AA-2DF4-4B26-B785-0E5E8B879D5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56B3A6AA-2DF4-4B26-B785-0E5E8B879D5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56B3A6AA-2DF4-4B26-B785-0E5E8B879D5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -53,6 +65,8 @@ Global
 		{E04C56AC-EE15-4B78-B965-1AA6825A8561} = {8D285B80-62AD-4F37-B7BB-D59605A16DA0}
 		{AD5F4C94-1FB3-4F1C-BFD3-0AC8336419AE} = {549E7BF3-8F22-4FF5-B8B2-6904F65EF7E4}
 		{C2ECBC2D-164F-44FF-86A4-60E6650D1C5D} = {8D285B80-62AD-4F37-B7BB-D59605A16DA0}
+		{8531216D-9B47-49DB-A057-E4356FDAD5D2} = {549E7BF3-8F22-4FF5-B8B2-6904F65EF7E4}
+		{56B3A6AA-2DF4-4B26-B785-0E5E8B879D5B} = {8D285B80-62AD-4F37-B7BB-D59605A16DA0}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D8789C36-5EA2-43F1-91F7-886AAB6DD1D7}
