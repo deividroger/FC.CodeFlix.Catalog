@@ -1,4 +1,5 @@
 ﻿using FC.CodeFlix.Catalog.Application.UseCases.Category.Common;
+using FC.CodeFlix.Catalog.EndToEndTests.Extensions.Datetime;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -36,7 +37,8 @@ public class GetCategoryApiTest: IDisposable
         output.Description.Should().Be(exampleCategory.Description);
         output.Name.Should().Be(exampleCategory.Name);
         output.IsActive.Should().Be(exampleCategory.IsActive);
-        output.CreatedAt.Should().Be(exampleCategory.CreatedAt);
+        output.CreatedAt.TrimMilliseconds()
+              .Should().Be(exampleCategory.CreatedAt.TrimMilliseconds());
 
     }
 

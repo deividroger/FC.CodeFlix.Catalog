@@ -1,3 +1,4 @@
+using FC.CodeFlix.Catalog.Api.ApiModels.Category;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.Common;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.DeleteCategory;
@@ -61,9 +62,12 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
         [HttpPut("{id:guid}")]
         [ProducesResponseType(typeof(CategoryModelOutput), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
-        public async Task<IActionResult> Update([FromBody] UpdateCategoryInput input,
+        public async Task<IActionResult> Update([FromBody] UpdateCategoryApiInput apiInput,
+                                                [FromRoute] Guid id,
                                         CancellationToken cancellationToken)
         {
+            var input = new UpdateCategoryInput(id, apiInput.Name, apiInput.Description, apiInput.IsActive);
+
             var output = await _mediator.Send(input, cancellationToken);
 
             return Ok(output);

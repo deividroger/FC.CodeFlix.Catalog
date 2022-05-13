@@ -1,5 +1,5 @@
-﻿using FC.CodeFlix.Catalog.Application.UseCases.Category.Common;
-using FC.CodeFlix.Catalog.Application.UseCases.Category.UpdateCategory;
+﻿using FC.CodeFlix.Catalog.Api.ApiModels.Category;
+using FC.CodeFlix.Catalog.Application.UseCases.Category.Common;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,8 +9,10 @@ using Xunit;
 
 namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Category.UpdateCategory;
 
+
+
 [Collection(nameof(UpdateCategoryApiTestFixture))]
-public class UpdateCategoryApiTest: IDisposable
+public class UpdateCategoryApiTest : IDisposable
 {
     private readonly UpdateCategoryApiTestFixture _fixture;
 
@@ -25,7 +27,7 @@ public class UpdateCategoryApiTest: IDisposable
         await _fixture.Persistence.InsertList(exampleCategoriesList);
         var exampleCategory = exampleCategoriesList[10];
 
-        var input = _fixture.GetExampleInput(exampleCategory.Id);
+        var input = _fixture.GetExampleInput();
 
         var (response, output) = await _fixture.ApiClient.Put<CategoryModelOutput>(
             $"/categories/{exampleCategory.Id}", input);
@@ -60,7 +62,7 @@ public class UpdateCategoryApiTest: IDisposable
         var exampleCategory = exampleCategoriesList[10];
 
 
-        var input = new UpdateCategoryInput(exampleCategory.Id, _fixture.GetValidCategoryName());
+        var input = new UpdateCategoryApiInput(_fixture.GetValidCategoryName());
 
         var (response, output) = await _fixture.ApiClient.Put<CategoryModelOutput>(
             $"/categories/{exampleCategory.Id}", input);
@@ -96,7 +98,7 @@ public class UpdateCategoryApiTest: IDisposable
         var exampleCategory = exampleCategoriesList[10];
 
 
-        var input = new UpdateCategoryInput(exampleCategory.Id, _fixture.GetValidCategoryName(), exampleCategory.Description);
+        var input = new UpdateCategoryApiInput(_fixture.GetValidCategoryName(), exampleCategory.Description);
 
         var (response, output) = await _fixture.ApiClient.Put<CategoryModelOutput>(
             $"/categories/{exampleCategory.Id}", input);
@@ -122,8 +124,6 @@ public class UpdateCategoryApiTest: IDisposable
         dbCategory.Id.Should().NotBeEmpty();
     }
 
-
-
     [Fact(DisplayName = nameof(ErrorWhenNotFound))]
     [Trait("EndToEnd/API", "Category/Update - Endpoints")]
     public async void ErrorWhenNotFound()
@@ -132,7 +132,7 @@ public class UpdateCategoryApiTest: IDisposable
         await _fixture.Persistence.InsertList(exampleCategoriesList);
         var randomGuid = Guid.NewGuid();
 
-        var input = _fixture.GetExampleInput(randomGuid);
+        var input = _fixture.GetExampleInput();
 
         var (response, output) = await _fixture.ApiClient.Put<ProblemDetails>(
             $"/categories/{randomGuid}", input);
@@ -154,17 +154,14 @@ public class UpdateCategoryApiTest: IDisposable
     [MemberData(nameof(UpdateCategoryApiTestDataGenerator.GetInvalidInputs),
         MemberType = typeof(UpdateCategoryApiTestDataGenerator)
         )]
-    public async void ErrorWhenCantInstantiateAggregate(UpdateCategoryInput input, string expectedDetail)
+    public async void ErrorWhenCantInstantiateAggregate(UpdateCategoryApiInput input, string expectedDetail)
     {
         var exampleCategoriesList = _fixture.GetExampleCategoriesList(20);
         await _fixture.Persistence.InsertList(exampleCategoriesList);
         var exampleCategory = exampleCategoriesList[10];
 
-        input.Id = exampleCategory.Id;
-
-
         var (response, output) = await _fixture.ApiClient.Put<ProblemDetails>(
-            $"/categories/{input.Id}", input);
+            $"/categories/{exampleCategory.Id}", input);
 
         response.Should().NotBeNull();
         output.Should().NotBeNull();
@@ -182,5 +179,5 @@ public class UpdateCategoryApiTest: IDisposable
     }
 
     public void Dispose()
-     => _fixture.CleanPersistence();
+         => _fixture.CleanPersistence();
 }

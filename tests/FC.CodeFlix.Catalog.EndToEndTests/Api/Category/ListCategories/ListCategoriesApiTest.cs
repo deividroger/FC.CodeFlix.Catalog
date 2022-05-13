@@ -1,5 +1,6 @@
 ﻿using FC.CodeFlix.Catalog.Application.UseCases.Category.ListCategories;
 using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
+using FC.CodeFlix.Catalog.EndToEndTests.Extensions.Datetime;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using System;
@@ -8,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Category.ListCategories;
 
@@ -15,9 +17,11 @@ namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Category.ListCategories;
 public class ListCategoriesApiTest: IDisposable
 {
     private readonly ListCategoriesApiTestFixture _fixture;
+    private readonly ITestOutputHelper _output;
 
-    public ListCategoriesApiTest(ListCategoriesApiTestFixture fixture)
-      => _fixture = fixture;
+    public ListCategoriesApiTest(ListCategoriesApiTestFixture fixture, 
+                                 ITestOutputHelper output)
+      => (_fixture,_output) = (fixture, output);
 
     [Fact(DisplayName = nameof(ListCategoriesAndTotalWithDefault))]
     [Trait("EndToEnd/API", "Category/List - Endpoints")]
@@ -49,7 +53,7 @@ public class ListCategoriesApiTest: IDisposable
             item.Description.Should().Be(exampleItem!.Description);
             item.Name.Should().Be(exampleItem.Name);
             item.IsActive.Should().Be(exampleItem.IsActive);
-            item.CreatedAt.Should().Be(exampleItem.CreatedAt);
+            item.CreatedAt.TrimMilliseconds().Should().Be(exampleItem.CreatedAt.TrimMilliseconds());
         }
     }
 
@@ -70,8 +74,6 @@ public class ListCategoriesApiTest: IDisposable
 
     }
 
-
-
     [Fact(DisplayName = nameof(ListCategoriesAndTotal))]
     [Trait("EndToEnd/API", "Category/List - Endpoints")]
     public async Task ListCategoriesAndTotal()
@@ -79,7 +81,6 @@ public class ListCategoriesApiTest: IDisposable
         
         var exampleCategoriesList = _fixture.GetExampleCategoriesList(20);
         await _fixture.Persistence.InsertList(exampleCategoriesList);
-
 
         var input = new ListCategoriesInput(page:1, perPage: 5);
 
@@ -104,7 +105,7 @@ public class ListCategoriesApiTest: IDisposable
             item.Description.Should().Be(exampleItem!.Description);
             item.Name.Should().Be(exampleItem.Name);
             item.IsActive.Should().Be(exampleItem.IsActive);
-            item.CreatedAt.Should().Be(exampleItem.CreatedAt);
+            item.CreatedAt.TrimMilliseconds().Should().Be(exampleItem.CreatedAt.TrimMilliseconds());
         }
     }
 
@@ -148,7 +149,8 @@ public class ListCategoriesApiTest: IDisposable
             item.Description.Should().Be(exampleItem!.Description);
             item.Name.Should().Be(exampleItem.Name);
             item.IsActive.Should().Be(exampleItem.IsActive);
-            item.CreatedAt.Should().Be(exampleItem.CreatedAt);
+            item.CreatedAt.TrimMilliseconds()
+                .Should().Be(exampleItem.CreatedAt.TrimMilliseconds());
         }
     }
 
@@ -209,7 +211,8 @@ public class ListCategoriesApiTest: IDisposable
             item.Description.Should().Be(exampleItem!.Description);
             item.Name.Should().Be(exampleItem.Name);
             item.IsActive.Should().Be(exampleItem.IsActive);
-            item.CreatedAt.Should().Be(exampleItem.CreatedAt);
+            item.CreatedAt.TrimMilliseconds()
+                .Should().Be(exampleItem.CreatedAt.TrimMilliseconds());
         }
 
     }
@@ -220,8 +223,6 @@ public class ListCategoriesApiTest: IDisposable
     [InlineData("name", "desc")]
     [InlineData("id", "asc")]
     [InlineData("id", "desc")]
-    [InlineData("createdAt", "asc")]
-    [InlineData("createdAt", "desc")]
     [InlineData("", "asc")]
 
     public async Task ListOrdered(string orderBy, string order)
@@ -253,6 +254,7 @@ public class ListCategoriesApiTest: IDisposable
 
         var expectedOrderList = _fixture.CloneCategoriesListOrdered(exampleCategoriesList, input.Sort, input.Dir);
 
+
         for (int i = 0; i < expectedOrderList.Count; i++)
         {
 
@@ -266,7 +268,67 @@ public class ListCategoriesApiTest: IDisposable
             outputItem.Id.Should().Be(expectedItem!.Id);
             outputItem.Description.Should().Be(expectedItem.Description);
             outputItem.IsActive.Should().Be(expectedItem.IsActive);
-            outputItem.CreatedAt.Should().Be(expectedItem.CreatedAt);
+            outputItem.CreatedAt.TrimMilliseconds()
+                      .Should().Be(expectedItem.CreatedAt.TrimMilliseconds()) ;
+        }
+    }
+
+
+    [Theory(DisplayName = nameof(ListOrderedDates))]
+    [Trait("Integration/Application", "ListCategories - Use Cases")]
+    
+    [InlineData("createdAt", "asc")]
+    [InlineData("createdAt", "desc")]
+  
+
+    public async Task ListOrderedDates(string orderBy, string order)
+    {
+        var exampleCategoriesList = _fixture.GetExampleCategoriesList(20);
+
+        await _fixture.Persistence.InsertList(exampleCategoriesList);
+
+
+        var inputOrder = order == "asc" ? SearchOrder.ASC : SearchOrder.DESC;
+
+        var input = new ListCategoriesInput(page: 1, perPage: 20, sort: orderBy, dir: inputOrder);
+
+
+
+        var (response, output) = await _fixture.ApiClient
+                                    .Get<ListCategoriesOutput>($"/categories/", input);
+
+        response.Should().NotBeNull();
+        response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status200OK);
+
+        output.Should().NotBeNull();
+        output!.Items.Should().HaveCount(input.PerPage);
+        output.Page.Should().Be(input.Page);
+        output.PerPage.Should().Be(input.PerPage);
+        output.Total.Should().Be(exampleCategoriesList.Count);
+
+        output.Items.Should().HaveCount(exampleCategoriesList.Count);
+
+        DateTime? lastItemDate = null;
+
+        foreach (var item in output.Items)
+        {
+            var exampleItem = exampleCategoriesList.FirstOrDefault(x => x.Id == item.Id);
+
+            exampleItem.Should().NotBeNull();
+
+            item.Description.Should().Be(exampleItem!.Description);
+            item.Name.Should().Be(exampleItem.Name);
+            item.IsActive.Should().Be(exampleItem.IsActive);
+            item.CreatedAt.TrimMilliseconds()
+                .Should().Be(exampleItem.CreatedAt.TrimMilliseconds());
+
+            if (lastItemDate != null){
+                if(order == "asc")
+                    Assert.True(item.CreatedAt >= lastItemDate);
+                else
+                    Assert.True(item.CreatedAt <= lastItemDate);
+            }
+            lastItemDate = item.CreatedAt;  
         }
     }
 

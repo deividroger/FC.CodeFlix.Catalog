@@ -65,15 +65,18 @@ public class CategoryRepository : ICategoryRepository
     private IQueryable<Category> AddOrderToQuery(IQueryable<Category> query,
                                                 string orderProperty,
                                                 SearchOrder order)
-     => ((orderProperty.ToLower(), order) switch
+     => (orderProperty.ToLower(), order) switch
      {
-         ("name", SearchOrder.ASC) => query.OrderBy(x => x.Name),
-         ("name", SearchOrder.DESC) => query.OrderByDescending(x => x.Name),
+         ("name", SearchOrder.ASC) => query.OrderBy(x => x.Name)
+            .ThenBy(x=>x.Id),
+         ("name", SearchOrder.DESC) => query.OrderByDescending(x => x.Name)
+            .ThenByDescending(x => x.Id),
          ("id", SearchOrder.ASC) => query.OrderBy(x => x.Id),
          ("id", SearchOrder.DESC) => query.OrderByDescending(x => x.Id),
 
          ("createdat", SearchOrder.ASC) => query.OrderBy(x => x.CreatedAt),
          ("createdat", SearchOrder.DESC) => query.OrderByDescending(x => x.CreatedAt),
          _ => query.OrderBy(x => x.Name)
-     }).ThenBy(x => x.CreatedAt);
+                   .ThenBy(x=>x.Id)     
+     };
 }
