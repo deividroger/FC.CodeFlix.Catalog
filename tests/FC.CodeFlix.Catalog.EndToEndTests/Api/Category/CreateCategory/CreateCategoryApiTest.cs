@@ -1,4 +1,5 @@
-﻿using FC.CodeFlix.Catalog.Application.UseCases.Category.Common;
+﻿using FC.CodeFlix.Catalog.Api.ApiModels.Response;
+using FC.CodeFlix.Catalog.Application.UseCases.Category.Common;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.CreateCategory;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +13,7 @@ using Xunit;
 namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Category.CreateCategory;
 
 [Collection(nameof(CreateCategoryApiTestFixture))]
-public class CreateCategoryApiTest: IDisposable
+public class CreateCategoryApiTest : IDisposable
 {
     private readonly CreateCategoryApiTestFixture _fixture;
 
@@ -25,7 +26,7 @@ public class CreateCategoryApiTest: IDisposable
     {
         var input = _fixture.GetExampleInput();
 
-        var (response, output) = await _fixture.ApiClient.Post<CategoryModelOutput>(
+        var (response, output) = await _fixture.ApiClient.Post<ApiResponse<CategoryModelOutput>>(
             "/categories",
             input);
 
@@ -33,14 +34,15 @@ public class CreateCategoryApiTest: IDisposable
         response!.StatusCode.Should().Be(HttpStatusCode.Created);
 
         output.Should().NotBeNull();
-        output!.Name.Should().Be(input.Name);
-        output.Description.Should().Be(input.Description);
-        output.IsActive.Should().Be(input.IsActive);
-        output.Id.Should().NotBeEmpty();
-        output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
+        output!.Data.Should().NotBeNull();
+        output.Data!.Name.Should().Be(input.Name);
+        output.Data.Description.Should().Be(input.Description);
+        output.Data.IsActive.Should().Be(input.IsActive);
+        output.Data.Id.Should().NotBeEmpty();
+        output.Data.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
 
         var dbCategory = await _fixture.Persistence
-                                              .GetById(output.Id);
+                                              .GetById(output.Data.Id);
 
         dbCategory.Should().NotBeNull();
         dbCategory!.Name.Should().Be(input.Name);
@@ -77,5 +79,5 @@ public class CreateCategoryApiTest: IDisposable
 
     public void Dispose()
         => _fixture.CleanPersistence();
-    
+
 }
