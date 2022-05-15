@@ -22,16 +22,16 @@ public class CategoryRepository : ICategoryRepository
         await _categories.AddAsync(aggregate, cancellationToken);
     }
 
-    public  Task Delete(Category aggregate, CancellationToken _)
+    public Task Delete(Category aggregate, CancellationToken _)
     {
-       return Task.FromResult( _categories.Remove(aggregate));
+        return Task.FromResult(_categories.Remove(aggregate));
     }
 
     public async Task<Category> Get(Guid id, CancellationToken cancellationToken)
     {
         var category = await _categories
                                 .AsNoTracking()
-                                .FirstOrDefaultAsync(x=> x.Id == id, cancellationToken);
+                                .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         NotFoundException.ThrowIfNull(category, $"category '{id}' not found.");
 
@@ -41,7 +41,7 @@ public class CategoryRepository : ICategoryRepository
     public async Task<SearchOutput<Category>> Search(SearchInput input, CancellationToken cancellationToken)
     {
 
-        var toSkip =  (input.Page - 1) * input.PerPage;
+        var toSkip = (input.Page - 1) * input.PerPage;
         var query = _categories.AsNoTracking();
 
         query = AddOrderToQuery(query, input.OrderBy, input.Order);
@@ -53,8 +53,8 @@ public class CategoryRepository : ICategoryRepository
         var items = await query
                             .Skip(toSkip)
                             .Take(input.PerPage).ToListAsync();
-       
-        return new SearchOutput<Category>(input.Page,input.PerPage,total,items);
+
+        return new SearchOutput<Category>(input.Page, input.PerPage, total, items);
     }
 
     public Task Update(Category aggregate, CancellationToken _)
@@ -65,16 +65,18 @@ public class CategoryRepository : ICategoryRepository
     private IQueryable<Category> AddOrderToQuery(IQueryable<Category> query,
                                                 string orderProperty,
                                                 SearchOrder order)
-    => (orderProperty.ToLower(), order) switch
-    {
-        ("name", SearchOrder.ASC) => query.OrderBy(x=>x.Name),
-        ("name", SearchOrder.DESC) => query.OrderByDescending(x => x.Name),
-        
-        ("id", SearchOrder.ASC) => query.OrderBy(x => x.Id),
-        ("id", SearchOrder.DESC) => query.OrderByDescending(x => x.Id),
+     => (orderProperty.ToLower(), order) switch
+     {
+         ("name", SearchOrder.ASC) => query.OrderBy(x => x.Name)
+            .ThenBy(x=>x.Id),
+         ("name", SearchOrder.DESC) => query.OrderByDescending(x => x.Name)
+            .ThenByDescending(x => x.Id),
+         ("id", SearchOrder.ASC) => query.OrderBy(x => x.Id),
+         ("id", SearchOrder.DESC) => query.OrderByDescending(x => x.Id),
 
-        ("createdat", SearchOrder.ASC) => query.OrderBy(x => x.CreatedAt),
-        ("createdat", SearchOrder.DESC) => query.OrderByDescending(x => x.CreatedAt),
-        _ => query.OrderBy(x => x.Name)
-    };
+         ("createdat", SearchOrder.ASC) => query.OrderBy(x => x.CreatedAt),
+         ("createdat", SearchOrder.DESC) => query.OrderByDescending(x => x.CreatedAt),
+         _ => query.OrderBy(x => x.Name)
+                   .ThenBy(x=>x.Id)     
+     };
 }

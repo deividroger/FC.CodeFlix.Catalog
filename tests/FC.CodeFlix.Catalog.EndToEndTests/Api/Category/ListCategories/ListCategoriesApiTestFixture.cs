@@ -1,19 +1,18 @@
-﻿using FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Category.Common;
-using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
+﻿using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
+using FC.CodeFlix.Catalog.EndToEndTests.Api.Category.Common;
 using System.Collections.Generic;
 using System.Linq;
 using Xunit;
-using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
+using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
+namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Category.ListCategories;
 
-namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Category.ListCategories;
-
-[CollectionDefinition(nameof(ListCategoriesTestFixture))]
-public class ListCategoriesTestFixtureCollection : ICollectionFixture<ListCategoriesTestFixture>
+[CollectionDefinition(nameof(ListCategoriesApiTestFixture))]
+public class ListCategoriesApiTestFixtureCollection: ICollectionFixture<ListCategoriesApiTestFixture>
 {
 
 }
 
-public class ListCategoriesTestFixture : CategoryUseCasesBaseFixture
+public class ListCategoriesApiTestFixture: CategoryBaseFixture
 {
     public List<DomainEntity.Category> GetExampleCategoriesListWithNames(List<string> names)
         => names.Select(name =>
@@ -30,9 +29,9 @@ public class ListCategoriesTestFixture : CategoryUseCasesBaseFixture
         var orderedEnumerable = (orderBy.ToLower(), order) switch
         {
             ("name", SearchOrder.ASC) => listClone.OrderBy(x => x.Name)
-                .ThenBy(x => x.Id),
+                .ThenBy(x=>x.Id),
             ("name", SearchOrder.DESC) => listClone.OrderByDescending(x => x.Name)
-                .ThenByDescending(x => x.Id),
+                .ThenByDescending(x=>x.Id),
 
             ("id", SearchOrder.ASC) => listClone.OrderBy(x => x.Id),
             ("id", SearchOrder.DESC) => listClone.OrderByDescending(x => x.Id),
@@ -40,9 +39,10 @@ public class ListCategoriesTestFixture : CategoryUseCasesBaseFixture
             ("createdat", SearchOrder.ASC) => listClone.OrderBy(x => x.CreatedAt),
             ("createdat", SearchOrder.DESC) => listClone.OrderByDescending(x => x.CreatedAt),
             _ => listClone.OrderBy(x => x.Name)
-                   .ThenBy(x => x.Id),
+                   .ThenBy(x=>x.Id),
         };
 
         return orderedEnumerable.ToList();
     }
+
 }
