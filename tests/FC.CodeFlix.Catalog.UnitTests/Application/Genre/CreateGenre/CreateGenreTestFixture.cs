@@ -17,15 +17,16 @@ public class CreateGenreTestFixture: GenreUseCasesBaseFixture
 {
     public CreateGenreInput GetExampleInput()
         => new CreateGenreInput(
-            GetValidGenreName(),
+           GetValidGenreName(),
             GetRandomBoolean()
             );
 
-    public Mock<IGenreRepository> GetGenreRepositoryMock()
-        => new();
+    public CreateGenreInput GetExampleInput(string? name)
+        => new CreateGenreInput(
+           name!,
+            GetRandomBoolean()
+            );
 
-    public Mock<IUnitOfWork> GeUnitOfWorkMock()
-        => new();
 
     public CreateGenreInput GetExampleInputWithCategories()
     {
@@ -40,6 +41,5 @@ public class CreateGenreTestFixture: GenreUseCasesBaseFixture
             );
     }
 
-    public Mock<ICategoryRepository> GetCategoryRepositoryMock()
-        => new();
+    
 }
