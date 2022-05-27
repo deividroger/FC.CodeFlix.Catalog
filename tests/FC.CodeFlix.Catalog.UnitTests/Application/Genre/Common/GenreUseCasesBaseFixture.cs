@@ -2,6 +2,9 @@
 using FC.CodeFlix.Catalog.Domain.Repository;
 using FC.CodeFlix.Catalog.UnitTests.Common;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
 namespace FC.CodeFlix.Catalog.UnitTests.Application.Genre.Common;
 
@@ -11,9 +14,20 @@ public class GenreUseCasesBaseFixture : BaseFixture
         => Faker.Commerce.Categories(1)[0];
 
 
-    public DomainEntity.Genre GetExampleGenre(bool? isActive = null)
-        => new(GetValidGenreName(), isActive ?? GetRandomBoolean());
+    public List<Guid> GetRandomIdsList(int? count = null)
+        => Enumerable
+            .Range(1, count ?? (new Random().Next(1, 10)))
+            .Select(_ => Guid.NewGuid())
+            .ToList();
 
+    public DomainEntity.Genre GetExampleGenre(bool? isActive = null, List<Guid>? categoriesIds = null)
+    {
+        var genre = new DomainEntity.Genre (GetValidGenreName(), isActive ?? GetRandomBoolean());
+
+        categoriesIds?.ForEach(genre.AddCategory);
+       
+        return genre;
+    }
 
     public Mock<IGenreRepository> GetGenreRepositoryMock()
     => new();
