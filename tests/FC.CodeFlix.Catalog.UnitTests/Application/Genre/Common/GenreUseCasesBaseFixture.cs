@@ -22,12 +22,21 @@ public class GenreUseCasesBaseFixture : BaseFixture
 
     public DomainEntity.Genre GetExampleGenre(bool? isActive = null, List<Guid>? categoriesIds = null)
     {
-        var genre = new DomainEntity.Genre (GetValidGenreName(), isActive ?? GetRandomBoolean());
+        var genre = new DomainEntity.Genre(GetValidGenreName(), isActive ?? GetRandomBoolean());
 
         categoriesIds?.ForEach(genre.AddCategory);
-       
+
         return genre;
     }
+
+    public List<DomainEntity.Genre> GetExampleGenresList(int count = 10)
+          => Enumerable.Range(1, count).Select(_ =>
+          {
+              var genre = GetExampleGenre();
+
+              GetRandomIdsList().ForEach(genre.AddCategory);
+              return genre;
+          }).ToList();
 
     public Mock<IGenreRepository> GetGenreRepositoryMock()
     => new();
