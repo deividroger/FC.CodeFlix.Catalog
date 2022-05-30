@@ -26,6 +26,9 @@ public class GenreTest
         var datetimeAfter = DateTime.Now.AddMilliseconds(10);
 
         genre.Should().NotBeNull();
+
+        genre.Id.Should().NotBeEmpty();
+
         genre.Name.Should().Be(genreName);
         genre.IsActive.Should().BeTrue();
 
@@ -62,6 +65,9 @@ public class GenreTest
         var datetimeAfter = DateTime.Now.AddMilliseconds(10);
 
         genre.Should().NotBeNull();
+
+        genre.Id.Should().NotBeEmpty();
+
         genre.Name.Should().Be(genreName);
         genre.IsActive.Should().Be(isActive);
 
@@ -87,6 +93,9 @@ public class GenreTest
         genre.Activate();
 
         genre.Should().NotBeNull();
+
+        genre.Id.Should().NotBeEmpty();
+
         genre.IsActive.Should().BeTrue();
         genre.Name.Should().Be(oldName);
         genre.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
@@ -106,6 +115,9 @@ public class GenreTest
 
         genre.Should().NotBeNull();
         genre.Name.Should().Be(oldName);
+
+        genre.Id.Should().NotBeEmpty();
+
         genre.IsActive.Should().BeFalse();
 
         genre.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
@@ -125,6 +137,9 @@ public class GenreTest
         genre.Update(newName);
         
         genre.Should().NotBeNull();
+
+        genre.Id.Should().NotBeEmpty();
+
         genre.Name.Should().Be(newName);
         genre.IsActive.Should().Be(oldIsActive);
 

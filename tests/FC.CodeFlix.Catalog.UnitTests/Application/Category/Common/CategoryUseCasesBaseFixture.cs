@@ -38,9 +38,6 @@ public abstract class CategoryUseCasesBaseFixture : BaseFixture
         return categoryDescription;
     }
 
-    public bool GetRandomBoolean()
-        => new Random().NextDouble() < 0.5;
-
     public DomainEntity.Category GetExampleCategory()
         => new(GetValidCategoryName(), GetValidCategoryDescription(), GetRandomBoolean());
 }

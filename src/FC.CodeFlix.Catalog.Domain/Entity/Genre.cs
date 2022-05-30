@@ -1,8 +1,10 @@
-﻿using FC.CodeFlix.Catalog.Domain.Validation;
+using FC.CodeFlix.Catalog.Domain.SeedWork;
+using FC.CodeFlix.Catalog.Domain.Validation;
 
 namespace FC.CodeFlix.Catalog.Domain.Entity;
 
-public class Genre
+public class Genre : AggregateRoot
+
 {
 
     private readonly List<Guid> _categories;

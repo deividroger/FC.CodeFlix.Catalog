@@ -79,4 +79,10 @@ public class CategoryRepository : ICategoryRepository
          _ => query.OrderBy(x => x.Name)
                    .ThenBy(x=>x.Id)     
      };
+
+    public Task<IReadOnlyList<Guid>> GetIdsListByIds(List<Guid> ids, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
+
 }
