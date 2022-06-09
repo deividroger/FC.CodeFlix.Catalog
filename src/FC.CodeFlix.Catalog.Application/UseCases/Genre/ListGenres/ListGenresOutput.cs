@@ -7,7 +7,7 @@ namespace FC.CodeFlix.Catalog.Application.UseCases.Genre.ListGenres;
 
 public class ListGenresOutput : PaginatedListOutput<GenreModelOutput>
 {
-    public ListGenresOutput(int page, int perPage, int total, IReadOnlyList<GenreModelOutput> items) 
+    public ListGenresOutput(int page, int perPage, int total, IReadOnlyList<GenreModelOutput> items)
         : base(page, perPage, total, items)
     {
     }
@@ -20,4 +20,14 @@ public class ListGenresOutput : PaginatedListOutput<GenreModelOutput>
                  .Select(GenreModelOutput.FromGenre)
                  .ToList());
 
+    public void FillWithCategoryNames(IReadOnlyList<DomainEntity.Category> categories)
+    {
+        foreach (var item in Items)
+        {
+            foreach (var categoryOutput in item.Categories)
+            {
+                categoryOutput.Name = categories?.FirstOrDefault(x => x.Id == categoryOutput.Id)?.Name;
+            }
+        }
+    }
 }

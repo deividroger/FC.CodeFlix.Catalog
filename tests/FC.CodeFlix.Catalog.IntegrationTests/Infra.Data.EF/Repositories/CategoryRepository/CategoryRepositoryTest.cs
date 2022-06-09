@@ -4,6 +4,7 @@ using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
 using FluentAssertions;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -192,6 +193,47 @@ public class CategoryRepositoryTest
         }
     }
 
+    [Fact(DisplayName = nameof(ListByIds))]
+    [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
+    public async Task ListByIds()
+    {
+        var dbContext = _fixture.CreateDbContext();
+
+
+        var exampleCategoriesList = _fixture.GetExampleCategoriesList(15);
+
+        var categoryIdsToGet = Enumerable
+                                    .Range(1, 3)
+                                    .Select(_ => {
+                                        var indexToGet = new Random().Next(0, exampleCategoriesList.Count - 1);
+                                        return exampleCategoriesList[indexToGet].Id;
+                                    }).Distinct()
+                                      .ToList();
+
+        await dbContext.AddRangeAsync(exampleCategoriesList);
+        await dbContext.SaveChangesAsync(CancellationToken.None);
+        var categoryRepository = new Repository.CategoryRepository(dbContext);
+
+
+       var categoriesList = await categoryRepository.GetListByIds(categoryIdsToGet,CancellationToken.None);
+
+
+        categoriesList.Should().NotBeNull();
+        categoriesList.Should().HaveCount(categoryIdsToGet.Count);
+
+
+        foreach (Category outputItem in categoriesList)
+        {
+            var exampleItem = exampleCategoriesList.Find(category => category.Id == outputItem.Id);
+
+            exampleItem.Should().NotBeNull();
+            outputItem.Name.Should().Be(exampleItem!.Name);
+            outputItem.Description.Should().Be(exampleItem.Description);
+            outputItem.IsActive.Should().Be(exampleItem.IsActive);
+            outputItem.CreatedAt.Should().Be(exampleItem.CreatedAt);
+        }
+    }
+
 
     [Fact(DisplayName = nameof(SearchReturnsEmpyWhenPersistenceIsEmpty))]
     [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]
@@ -214,8 +256,6 @@ public class CategoryRepositoryTest
         output.Items.Should().HaveCount(0);
  
     }
-
-
 
     [Theory(DisplayName = nameof(SearchReturnsPaginated))]
     [Trait("Integration/Infra.Data", "CategoryRepository - Repositories")]

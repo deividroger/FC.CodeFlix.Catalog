@@ -34,8 +34,4 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Application\UseCases\Genre\CreateGenre\" />
-  </ItemGroup>
-
 </Project>

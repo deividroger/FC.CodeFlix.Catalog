@@ -50,7 +50,7 @@ public class GetGenreTest
 
         foreach (var expectedId in exampleGenre.Categories)
         {
-            output.Categories.Should().Contain(expectedId);
+            output.Categories.Should().Contain(relation => relation.Id == expectedId);
         }
 
         genreRepositoryMock.Verify(

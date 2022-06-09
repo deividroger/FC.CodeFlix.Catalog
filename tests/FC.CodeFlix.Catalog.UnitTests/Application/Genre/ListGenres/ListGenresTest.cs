@@ -25,6 +25,7 @@ public class ListGenresTest
     public async Task ListGenres()
     {
         var genreRepositoryMock = _fixture.GetGenreRepositoryMock();
+        var categoryMock = _fixture.GetCategoryRepositoryMock();
 
         var genresListExample = _fixture.GetExampleGenresList();
 
@@ -41,7 +42,7 @@ public class ListGenresTest
                                              It.IsAny<CancellationToken>())
         ).ReturnsAsync(outputRepositorySearch);
 
-        var useCase = new UseCase.ListGenres(genreRepositoryMock.Object);
+        var useCase = new UseCase.ListGenres(genreRepositoryMock.Object, categoryMock.Object);
 
         var output = await useCase.Handle(input, CancellationToken.None);
 
@@ -57,7 +58,7 @@ public class ListGenresTest
 
             var repositoryGenre = outputRepositorySearch.Items.FirstOrDefault(x => x.Id == outputItem.Id);
 
-            repositoryGenre.Should().NotBeNull();   
+            repositoryGenre.Should().NotBeNull();
             outputItem.Should().NotBeNull();
             outputItem.Name.Should().Be(repositoryGenre!.Name);
             outputItem.IsActive.Should().Be(repositoryGenre!.IsActive);
@@ -67,7 +68,7 @@ public class ListGenresTest
 
             foreach (var expectedId in repositoryGenre.Categories)
             {
-                outputItem.Categories.Should().Contain(expectedId);
+                outputItem.Categories.Should().Contain(relation => relation.Id == expectedId);
             }
         });
 
@@ -85,6 +86,17 @@ public class ListGenresTest
                 )
             , Times.Once());
 
+        var expectedIds = genresListExample
+                                    .SelectMany(genre => genre.Categories).Distinct().ToList();
+        categoryMock.Verify(
+            x => x.GetListByIds(
+                It.Is<List<Guid>>( parameterList => 
+                expectedIds.All( id=> parameterList.Contains(id)
+                && expectedIds.Count == parameterList.Count
+            )), 
+            It.IsAny<CancellationToken>()),
+            Times.Once()
+        );
     }
 
     [Fact(DisplayName = nameof(ListEmpty))]
@@ -106,7 +118,7 @@ public class ListGenresTest
                                              It.IsAny<CancellationToken>())
         ).ReturnsAsync(outputRepositorySearch);
 
-        var useCase = new UseCase.ListGenres(genreRepositoryMock.Object);
+        var useCase = new UseCase.ListGenres(genreRepositoryMock.Object, _fixture.GetCategoryRepositoryMock().Object);
 
         var output = await useCase.Handle(input, CancellationToken.None);
 
@@ -117,7 +129,7 @@ public class ListGenresTest
         output.Items.Should().HaveCount(outputRepositorySearch.Items.Count);
 
         output.Items.Should().HaveCount(outputRepositorySearch.Items.Count);
- 
+
         genreRepositoryMock.Verify(
             x => x.Search(
                 It.Is<SearchInput>(
@@ -139,6 +151,7 @@ public class ListGenresTest
     public async Task ListUsingDefaultInputValues()
     {
         var genreRepositoryMock = _fixture.GetGenreRepositoryMock();
+        var categoryMock = _fixture.GetCategoryRepositoryMock();
 
         var outputRepositorySearch = new SearchOutput<DomainEntity.Genre>(
          currentPage: 1,
@@ -151,7 +164,7 @@ public class ListGenresTest
                                              It.IsAny<CancellationToken>())
         ).ReturnsAsync(outputRepositorySearch);
 
-        var useCase = new UseCase.ListGenres(genreRepositoryMock.Object);
+        var useCase = new UseCase.ListGenres(genreRepositoryMock.Object, categoryMock.Object);
 
         var output = await useCase.Handle(new UseCase.ListGenresInput(), CancellationToken.None);
 
@@ -165,8 +178,8 @@ public class ListGenresTest
                     searchInput.Page == 1
                     && searchInput.PerPage == 15
                     && searchInput.Search == ""
-                    && searchInput.OrderBy ==  ""
-                    && searchInput.Order ==  SearchOrder.ASC
+                    && searchInput.OrderBy == ""
+                    && searchInput.Order == SearchOrder.ASC
                     ),
                 It.IsAny<CancellationToken>()
                 )
