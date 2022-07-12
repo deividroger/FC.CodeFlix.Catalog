@@ -1,6 +1,4 @@
-﻿using FC.CodeFlix.Catalog.Api.ApiModels.Response;
-using FC.CodeFlix.Catalog.Application.UseCases.Genre.Common;
-using FC.CodeFlix.Catalog.Infra.Data.EF.Models;
+﻿using FC.CodeFlix.Catalog.Infra.Data.EF.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,64 +9,71 @@ using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Genre.GetGenre;
+namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Genre.DeleteGenre;
 
-
-[Collection(nameof(GetGenreApiTestFixture))]
-public class GetGenreApiTest
+[Collection(nameof(DeleteGenreTestApiFixture))]
+public class DeleteGenreTestApi
 {
-    private readonly GetGenreApiTestFixture _fixture;
+    private readonly DeleteGenreTestApiFixture _fixture;
 
-    public GetGenreApiTest(GetGenreApiTestFixture fixture)
+    public DeleteGenreTestApi(DeleteGenreTestApiFixture fixture)
         => _fixture = fixture;
 
-    [Fact(DisplayName =nameof(GetGenre))]
-    [Trait("EndToEnd/API", "Genre/Get - Endpoints")]
-    public async Task GetGenre()
+    [Fact(DisplayName =nameof(DeleteGenreAsync))]
+    [Trait("EndToEnd/API", "Genre/Delete - Endpoints")]
+    public async Task DeleteGenreAsync()
     {
         var exampleGenre = _fixture.GetExampleListGenres(10);
         var targetGenre = exampleGenre[5];
 
         await _fixture.Persistence.InsertList(exampleGenre);
 
-        var (response, output) = await _fixture.ApiClient.Get<ApiResponse<GenreModelOutput>>($"/genres/{targetGenre.Id}");
+        var (response, output) = await _fixture.ApiClient.Delete<object>($"/genres/{targetGenre.Id}");
 
         response.Should().NotBeNull();
-        response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status200OK);
+        response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status204NoContent);
 
-        output.Should().NotBeNull();
-        output!.Data.Id.Should().Be(targetGenre.Id);
-        output!.Data.Name.Should().Be(targetGenre.Name);
-        output!.Data.IsActive.Should().Be(targetGenre.IsActive);
+        output.Should().BeNull();
 
+        var genreDb = await _fixture.Persistence.GetById(targetGenre.Id);
+
+        genreDb.Should().BeNull();
+        
     }
 
-    [Fact(DisplayName = nameof(NotFound))]
-    [Trait("EndToEnd/API", "Genre/Get - Endpoints")]
-    public async Task NotFound()
+    [Fact(DisplayName = nameof(WhenNotFound404))]
+    [Trait("EndToEnd/API", "Genre/Delete - Endpoints")]
+    public async Task WhenNotFound404()
     {
         var exampleGenre = _fixture.GetExampleListGenres(10);
-        var randomGuid = Guid.NewGuid();
+        var targetGenre = exampleGenre[5];
 
         await _fixture.Persistence.InsertList(exampleGenre);
 
-        var (response, output) = await _fixture.ApiClient.Get<ProblemDetails>($"/genres/{randomGuid}");
+        var randomGuid = Guid.NewGuid();
+
+
+        var (response, output) = await _fixture.ApiClient.Delete<ProblemDetails>($"/genres/{randomGuid}");
 
         response.Should().NotBeNull();
+        output.Should().NotBeNull();
+
         response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status404NotFound);
 
-        output.Should().NotBeNull();
         output!.Type.Should().Be("NotFound");
         output.Detail.Should().Be($"Genre '{randomGuid}' not found.");
-        
+
+
+
     }
 
-    [Fact(DisplayName = nameof(GetGenre))]
-    [Trait("EndToEnd/API", "Genre/Get - Endpoints")]
-    public async Task GetGenreWithRelations()
+
+    [Fact(DisplayName = nameof(DeleteGenreWithRelationsAsync))]
+    [Trait("EndToEnd/API", "Genre/Delete - Endpoints")]
+    public async Task DeleteGenreWithRelationsAsync()
     {
         var exampleGenres = _fixture.GetExampleListGenres(10);
-        
+
         var targetGenre = exampleGenres[5];
 
         var random = new Random();
@@ -77,7 +82,7 @@ public class GetGenreApiTest
 
         exampleGenres.ForEach(genre =>
         {
-            int relationsCount = random.Next(2, exampleCategories.Count -1);
+            int relationsCount = random.Next(2, exampleCategories.Count - 1);
 
             for (int i = 0; i < relationsCount; i++)
             {
@@ -106,19 +111,20 @@ public class GetGenreApiTest
         await _fixture.CategoryPersistence.InsertList(exampleCategories);
         await _fixture.Persistence.InsertGenresCategoriesRelationsList(genresCategories);
 
-        var (response, output) = await _fixture.ApiClient.Get<ApiResponse<GenreModelOutput>>($"/genres/{targetGenre.Id}");
+        var (response, output) = await _fixture.ApiClient.Delete<object>($"/genres/{targetGenre.Id}");
 
         response.Should().NotBeNull();
-        response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status200OK);
+        response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status204NoContent);
 
-        output.Should().NotBeNull();
-        output!.Data.Id.Should().Be(targetGenre.Id);
-        output!.Data.Name.Should().Be(targetGenre.Name);
-        output!.Data.IsActive.Should().Be(targetGenre.IsActive);
+        output.Should().BeNull();
 
-        var relatedCategoriesIds = output.Data.Categories.Select(relation => relation.Id).ToList();
+        var genreDb = await _fixture.Persistence.GetById(targetGenre.Id);
 
-        relatedCategoriesIds.Should().BeEquivalentTo(targetGenre.Categories);
+        genreDb.Should().BeNull();
+
+        var relations = await _fixture.Persistence.GetGenresCategoriesRelationsById(targetGenre.Id);
+
+        relations.Should().HaveCount(0);
 
     }
 }
