@@ -39,6 +39,15 @@ public class ApiGlobalExceptionFilter : IExceptionFilter
             details.Detail = expection!.Message;
 
         }
+        else if (expection is RelatedAggregateException)
+        {
+
+            details.Title = "Invalid Related Aggregate";
+            details.Status = StatusCodes.Status422UnprocessableEntity;
+            details.Type = "RelatedAggregate";
+            details.Detail = expection!.Message;
+
+        }
         else
         {
             
