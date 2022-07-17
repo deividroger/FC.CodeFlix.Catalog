@@ -1,10 +1,8 @@
 ﻿using FC.CodeFlix.Catalog.Infra.Data.EF;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using System;
-using System.Linq;
 
 namespace FC.CodeFlix.Catalog.EndToEndTests.Base;
 
