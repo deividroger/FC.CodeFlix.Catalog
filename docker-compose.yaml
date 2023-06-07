@@ -1,6 +1,6 @@
 version: '3.4'
 services:
-    fc.codeflix.catalog.fb:
+    fc.codeflix.catalog.db:
       hostname: catalogdb
       container_name: catalogdb
       image: mysql

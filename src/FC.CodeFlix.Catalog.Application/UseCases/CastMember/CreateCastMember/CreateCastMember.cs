@@ -20,6 +20,6 @@ public class CreateCastMember : ICreateCastMember
 
         await _unitOfWork.Commit(cancellationToken);
 
-        return new CastMemberModelOutput(castMember.Id, castMember.Name, castMember.Type, castMember.CreatedAt);
+        return CastMemberModelOutput.FromCastMember(castMember);
     }
 }

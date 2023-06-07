@@ -1,15 +1,13 @@
 ﻿using FC.CodeFlix.Catalog.Application.Interfaces;
-using FC.CodeFlix.Catalog.Domain.Enum;
-
-using UseCase = FC.CodeFlix.Catalog.Application.UseCases.CastMember.CreateCastMember;
-using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
+using FC.CodeFlix.Catalog.Domain.Exceptions;
 using FC.CodeFlix.Catalog.Domain.Repository;
-using Xunit;
-using Moq;
-using System.Threading.Tasks;
-using System.Threading;
 using FluentAssertions;
-using System;
+using Moq;
+using System.Threading;
+using System.Threading.Tasks;
+using Xunit;
+using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
+using UseCase = FC.CodeFlix.Catalog.Application.UseCases.CastMember.CreateCastMember;
 
 namespace FC.CodeFlix.Catalog.UnitTests.Application.CastMember.CreateCastMember;
 
@@ -25,7 +23,8 @@ public class CreateCastMemberTest
     [Trait("Application", "CreateCastMember - UseCases")]
     public async Task Create()
     {
-        var input = new UseCase.CreateCastMemberInput("Jorge Lucas", CastMemberType.Director);
+        var input = new UseCase.CreateCastMemberInput(_fixture.GetValidName(), 
+                                                      _fixture.GetRandomCastMemberType());
 
         var repositoryMock = new Mock<ICastMemberRepository>();
         var unitOfWorkMock = new Mock<IUnitOfWork>();
@@ -50,5 +49,27 @@ public class CreateCastMemberTest
                                             x.Type == input.Type),
              It.IsAny<CancellationToken>()
             ), Times.Once);
+    }
+
+    [Theory(DisplayName = nameof(ThrowsWhenInvalidName))]
+    [Trait("Application", "CreateCastMember - UseCases")]
+    [InlineData("")]
+    [InlineData("  ")]
+    [InlineData(null)]
+
+    public async Task ThrowsWhenInvalidName(string? name)
+    {
+        var input = new UseCase.CreateCastMemberInput(name!,
+                                                      _fixture.GetRandomCastMemberType());
+
+        var repositoryMock = new Mock<ICastMemberRepository>();
+        var unitOfWorkMock = new Mock<IUnitOfWork>();
+
+        var useCase = new UseCase.CreateCastMember(repositoryMock.Object, unitOfWorkMock.Object);
+
+        var action = async () =>  await useCase.Handle(input, CancellationToken.None);
+
+        await action.Should().ThrowAsync<EntityValidationException>().WithMessage("Name should not be empty or null");
+       
     }
 }
