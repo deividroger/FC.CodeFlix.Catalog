@@ -18,6 +18,8 @@ public class CodeFlixCatalogDbContext :
     public DbSet<Genre> Genres => 
         Set<Genre>();
 
+    public DbSet<CastMember> CastMembers => Set<CastMember>();
+
     public DbSet<GenresCategories> GenresCategories 
         => Set<GenresCategories>();
 

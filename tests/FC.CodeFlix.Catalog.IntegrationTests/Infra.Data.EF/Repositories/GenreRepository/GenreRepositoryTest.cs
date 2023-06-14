@@ -609,7 +609,7 @@ public class GenreRepositoryTest
 
 
 
-    [Theory(DisplayName = nameof(SearchReturnsPaginated))]
+    [Theory(DisplayName = nameof(SearchByText))]
     [Trait("Integration/Infra.Data", "GenreRepository - Repositories")]
     [InlineData("action", 1, 5, 1, 1)]
     [InlineData("horror", 1, 5, 3, 3)]
