@@ -1,35 +1,35 @@
-﻿using FC.CodeFlix.Catalog.Domain.Entity;
-using FC.CodeFlix.Catalog.Domain.Enum;
-using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
+﻿using FC.CodeFlix.Catalog.Domain.Enum;
 using FC.CodeFlix.Catalog.IntegrationTests.Base;
-using System;
 using System.Collections.Generic;
+using DomainEntity= FC.CodeFlix.Catalog.Domain.Entity;
+using System;
 using System.Linq;
+using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
 using Xunit;
 
-namespace FC.CodeFlix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.CastMemberRepository;
+namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.CastMember.Common;
 
+[CollectionDefinition(nameof(CastMemberUseCasesBaseFixture))]
+public class CastMemberUseCasesBaseFixtureCollection: ICollectionFixture<CastMemberUseCasesBaseFixture> { }
 
-[CollectionDefinition(nameof(CastMemberRepositoryTestFixture))]
-public class CastMemberRepositoryTestFixtureCollection : ICollectionFixture<CastMemberRepositoryTestFixture> { }
-
-public class CastMemberRepositoryTestFixture : BaseFixture
+public class CastMemberUseCasesBaseFixture: BaseFixture
 {
-    public CastMember GetExampleCastMember()
+    public DomainEntity.CastMember GetExampleCastMember()
         => new(GetValidName(), GetRandomCastMemberType());
 
     public string GetValidName()
         => Faker.Name.FullName();
 
-    public CastMemberType GetRandomCastMemberType()
-        => (CastMemberType)(new Random()).Next(1, 2);
 
-    public List<CastMember> GetExampleCastMemberList(int quantity)
+    public CastMemberType GetRandomCastMemberType()
+        => (CastMemberType)new Random().Next(1, 2);
+
+    public List<DomainEntity.CastMember> GetExampleCastMemberList(int quantity)
         => Enumerable.Range(1, quantity)
             .Select(_ => GetExampleCastMember())
             .ToList();
 
-    public List<CastMember> GetExampleCastMemberListByNames(List<string> names)
+    public List<DomainEntity.CastMember> GetExampleCastMemberListByNames(List<string> names)
         => names.Select(name =>
         {
             var example = GetExampleCastMember();
@@ -37,9 +37,9 @@ public class CastMemberRepositoryTestFixture : BaseFixture
             return example;
         }).ToList();
 
-    public List<CastMember> CloneCastMemberListOrdered(List<CastMember> castMembersList , string orderBy, SearchOrder order)
+    public List<DomainEntity.CastMember> CloneCastMemberListOrdered(List<DomainEntity.CastMember> castMembersList, string orderBy, SearchOrder order)
     {
-        var listClone = new List<CastMember>(castMembersList);
+        var listClone = new List<DomainEntity.CastMember>(castMembersList);
 
         var orderedEnumerable = (orderBy.ToLower(), order) switch
         {
@@ -60,4 +60,5 @@ public class CastMemberRepositoryTestFixture : BaseFixture
         return orderedEnumerable.ToList();
 
     }
+
 }
