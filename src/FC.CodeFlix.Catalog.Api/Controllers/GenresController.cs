@@ -36,12 +36,12 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
 
 
         [HttpDelete("{id:guid}")]
-        [ProducesResponseType(typeof(ApiResponse<CategoryModelOutput>), StatusCodes.Status204NoContent)]
+        [ProducesResponseType( StatusCodes.Status204NoContent)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         public async Task<IActionResult> DeleteById([FromRoute] Guid id,
                                                  CancellationToken cancellationToken)
         {
-            var output = await _mediator.Send(new DeleteGenreInput(id), cancellationToken);
+            await _mediator.Send(new DeleteGenreInput(id), cancellationToken);
 
             return NoContent();
         }

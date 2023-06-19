@@ -1,6 +1,5 @@
 ﻿using FC.CodeFlix.Catalog.EndToEndTests.Api.Category.Common;
 using FC.CodeFlix.Catalog.EndToEndTests.Base;
-using FC.CodeFlix.Catalog.Infra.Data.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;

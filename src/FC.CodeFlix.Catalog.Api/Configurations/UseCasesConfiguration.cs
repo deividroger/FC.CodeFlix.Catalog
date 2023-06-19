@@ -23,6 +23,8 @@ public static class UseCasesConfiguration
 
         services.AddTransient<IGenreRepository, GenreRepository>();
 
+        services.AddTransient<ICastMemberRepository, CastMemberRepository>();
+
         services.AddTransient<IUnitOfWork, UnitOfWork>();
 
         return services;
