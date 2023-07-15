@@ -73,8 +73,6 @@ public class GenreRepository : IGenreRepository
         }
 
     }
-
-
     public async Task<SearchOutput<Genre>> Search(SearchInput input, CancellationToken cancellationToken)
     {
         var toSkip = (input.Page - 1) * input.PerPage;
@@ -84,7 +82,7 @@ public class GenreRepository : IGenreRepository
         query = AddOrderToQuery(query, input.OrderBy, input.Order);
 
         if (!string.IsNullOrWhiteSpace(input.Search))
-            query = query.Where(x=>x.Name.Contains(input.Search));
+            query = query.Where(x => x.Name.Contains(input.Search));
 
         var total = await query.CountAsync(cancellationToken);
 
@@ -92,7 +90,7 @@ public class GenreRepository : IGenreRepository
                                 .Skip(toSkip)
                                 .Take(input.PerPage)
                                 .ToListAsync(cancellationToken);
-        
+
         genres.ForEach(async genre =>
         {
 
@@ -125,4 +123,8 @@ public class GenreRepository : IGenreRepository
                 .ThenBy(x => x.Id)
   };
 
+    public Task<IReadOnlyList<Guid>> GetIdsListByIds(List<Guid> ids, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }
