@@ -18,7 +18,9 @@ public record CreateVideoOutput(
     IReadOnlyCollection<Guid>? CastMembersIds = null,
     string? Thumb = null,
     string?Banner = null,
-    string? ThumbHalf = null
+    string? ThumbHalf = null,
+    string? Media = null,
+    string? Trailer = null
     )
 {
     public static CreateVideoOutput FromVideo(DomainEntity.Video video)
@@ -37,5 +39,7 @@ public record CreateVideoOutput(
             video.CastMembers,
             video.Thumb?.Path,
             video.Banner?.Path,
-            video.ThumbHalf?.Path);
+            video.ThumbHalf?.Path,
+            video.Media?.FilePath,
+            video.Trailer?.FilePath);
 }

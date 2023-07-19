@@ -1,4 +1,5 @@
-﻿using FC.CodeFlix.Catalog.Application.Exceptions;
+﻿using FC.CodeFlix.Catalog.Application.Common;
+using FC.CodeFlix.Catalog.Application.Exceptions;
 using FC.CodeFlix.Catalog.Application.Interfaces;
 using FC.CodeFlix.Catalog.Domain.Exceptions;
 using FC.CodeFlix.Catalog.Domain.Repository;
@@ -54,6 +55,8 @@ public class CreateVideo : ICreateVideo
         {
             await UploadImagesMedia(input, video, cancellationToken);
 
+            await UploadVideoMedias(input, video, cancellationToken);
+
             await _videoRepository.Insert(video, cancellationToken);
             await _unitOfWork.Commit(cancellationToken);
 
@@ -67,6 +70,23 @@ public class CreateVideo : ICreateVideo
         }
     }
 
+    private async Task UploadVideoMedias(CreateVideoInput input, DomainEntity.Video video, CancellationToken cancellationToken)
+    {
+        if(input.Media is not null)
+        {
+            var fileName = StorageFileName.Create(video.Id,nameof(video.Media), input.Media.Extension);
+            var mediaUrl =  await _storageService.Upload(fileName, input.Media.FileStream, cancellationToken);
+            video.UpdateMedia(mediaUrl);
+        }
+
+        if (input.Trailer is not null)
+        {
+            var fileName = StorageFileName.Create(video.Id, nameof(video.Trailer), input.Trailer.Extension);
+            var trailerUrl = await _storageService.Upload(fileName, input.Trailer.FileStream, cancellationToken);
+            video.UpdateTrailer(trailerUrl);
+        }
+    }
+
     private async Task ClearStorage(DomainEntity.Video video, CancellationToken cancellationToken)
     {
         if (video.Thumb is not null)
@@ -75,14 +95,22 @@ public class CreateVideo : ICreateVideo
             await _storageService.Delete(video.Banner.Path, cancellationToken);
         if (video.ThumbHalf is not null)
             await _storageService.Delete(video.ThumbHalf.Path, cancellationToken);
+
+        if(video.Media is not null)
+            await _storageService.Delete(video.Media.FilePath, cancellationToken);
+
+        if (video.Trailer is not null)
+            await _storageService.Delete(video.Trailer.FilePath, cancellationToken);
     }
 
     private async Task UploadImagesMedia(CreateVideoInput input, DomainEntity.Video video, CancellationToken cancellationToken)
     {
         if (input.Thumb is not null)
         {
+            var fileName = StorageFileName.Create(video.Id, nameof(video.Thumb), input.Thumb.Extension);
+
             var thumbUrl = await _storageService.Upload(
-                   $"{video.Id}-thumb.{input.Thumb.Extension}",
+                   fileName,
                    input.Thumb.FileStream,
                    cancellationToken);
 
@@ -91,8 +119,10 @@ public class CreateVideo : ICreateVideo
 
         if (input.Banner is not null)
         {
+            var fileName = StorageFileName.Create(video.Id, nameof(video.Banner), input.Banner.Extension);
+
             var bannerUrl = await _storageService.Upload(
-                   $"{video.Id}-banner.{input.Banner.Extension}",
+                   fileName,
                    input.Banner.FileStream,
                    cancellationToken);
 
@@ -101,8 +131,10 @@ public class CreateVideo : ICreateVideo
 
         if (input.ThumbHalf is not null)
         {
+            var fileName = StorageFileName.Create(video.Id, nameof(video.ThumbHalf), input.ThumbHalf.Extension);
+
             var thumbHalfUrl = await _storageService.Upload(
-                   $"{video.Id}-thumb-half.{input.ThumbHalf.Extension}",
+                   fileName,
                    input.ThumbHalf.FileStream,
                    cancellationToken);
 

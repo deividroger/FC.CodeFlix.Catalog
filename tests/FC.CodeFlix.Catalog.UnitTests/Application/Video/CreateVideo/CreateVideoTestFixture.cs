@@ -3,7 +3,6 @@ using FC.CodeFlix.Catalog.Application.UseCases.Video.CreateVideo;
 using FC.CodeFlix.Catalog.UnitTests.Common.Fixtures;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Xunit;
 
 namespace FC.CodeFlix.Catalog.UnitTests.Application.Video.CreateVideo;
@@ -22,7 +21,9 @@ public class CreateVideoTestFixture : VideoTestFixtureBase
         List<Guid>? castMembersIds = null,
         FileInput? thumb = null,
         FileInput? banner = null,
-        FileInput? thumbHalf = null
+        FileInput? thumbHalf = null,
+        FileInput? media = null,
+        FileInput? trailer = null
         )
         => new(
                 GetValidTitle(),
@@ -37,7 +38,9 @@ public class CreateVideoTestFixture : VideoTestFixtureBase
                 castMembersIds,
                 thumb,
                 banner,
-                thumbHalf
+                thumbHalf,
+                media,
+                trailer
                 );
 
     public CreateVideoInput CreateValidInputWillAllImages()
@@ -57,4 +60,22 @@ public class CreateVideoTestFixture : VideoTestFixtureBase
                GetValidImageFileInput()
                );
 
+    public CreateVideoInput CreateValidInputWillAllMedias()
+      => new(
+               GetValidTitle(),
+               GetValidDescription(),
+               GetValidYearLaunched(),
+               GetRandomBoolean(),
+               GetRandomBoolean(),
+               GetValidDuration(),
+               GetRandomRating(),
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                GetValidMediaFileInput(),
+                GetValidMediaFileInput()
+               );
 }
