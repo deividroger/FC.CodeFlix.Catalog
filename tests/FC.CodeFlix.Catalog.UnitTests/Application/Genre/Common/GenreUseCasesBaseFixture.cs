@@ -10,9 +10,6 @@ namespace FC.CodeFlix.Catalog.UnitTests.Application.Genre.Common;
 
 public class GenreUseCasesBaseFixture : BaseFixture
 {
-    public string GetValidGenreName()
-        => Faker.Commerce.Categories(1)[0];
-
 
     public List<Guid> GetRandomIdsList(int? count = null)
         => Enumerable
@@ -28,6 +25,9 @@ public class GenreUseCasesBaseFixture : BaseFixture
 
         return genre;
     }
+
+    public string GetValidGenreName()
+        => Faker.Commerce.Categories(1)[0];
 
     public List<DomainEntity.Genre> GetExampleGenresList(int count = 10)
           => Enumerable.Range(1, count).Select(_ =>

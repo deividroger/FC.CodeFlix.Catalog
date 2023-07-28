@@ -78,4 +78,9 @@ public class CastMemberRepository : ICastMemberRepository
     {
         throw new NotImplementedException();
     }
+
+    public Task<IReadOnlyList<CastMember>> GetListByIds(List<Guid> ids, CancellationToken cancellationToken)
+    {
+        throw new NotImplementedException();
+    }
 }

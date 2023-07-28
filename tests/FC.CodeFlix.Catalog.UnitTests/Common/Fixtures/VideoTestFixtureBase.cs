@@ -3,14 +3,14 @@ using FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.Enum;
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
-using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
 
 namespace FC.CodeFlix.Catalog.UnitTests.Common.Fixtures;
 
 public abstract class VideoTestFixtureBase: BaseFixture
 {
-    public DomainEntity.Video GetValidVideo()
+    public Video GetValidVideo()
        => new(
            GetValidTitle(),
            GetValidDescription(),
@@ -21,6 +21,42 @@ public abstract class VideoTestFixtureBase: BaseFixture
            GetRandomRating()
 
            );
+
+    public Video GetValidVideoWithAllProperties()
+    {
+        var video = new Video(
+               GetValidTitle(),
+               GetValidDescription(),
+               GetValidYearLaunched(),
+               GetRandomBoolean(),
+               GetRandomBoolean(),
+               GetValidDuration(),
+               GetRandomRating()
+
+               );
+        video.UpdateThumb( GetValidImagePath());
+        video.UpdateBanner( GetValidImagePath());
+        video.UpdateThumbHalf( GetValidMediaPath());
+
+        video.UpdateMedia( GetValidMediaPath());
+        video.UpdateTrailer(GetValidImagePath());
+
+        var random = new Random();
+        Enumerable.Range(1, random.Next(2, 5))
+            .ToList()
+            .ForEach(_ => video.AddCastMember(Guid.NewGuid()));
+
+        Enumerable.Range(1, random.Next(2, 5))
+            .ToList()
+            .ForEach(_ => video.AddGenre(Guid.NewGuid()));
+
+        Enumerable.Range(1, random.Next(2, 5))
+            .ToList()
+            .ForEach(_ => video.AddCastMember(Guid.NewGuid()));
+
+        return video;
+    }
+
     public Rating GetRandomRating()
     {
         var enumValues = Enum.GetValues<Rating>();

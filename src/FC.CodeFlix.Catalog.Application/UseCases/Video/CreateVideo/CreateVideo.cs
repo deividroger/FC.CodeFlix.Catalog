@@ -1,6 +1,7 @@
 ﻿using FC.CodeFlix.Catalog.Application.Common;
 using FC.CodeFlix.Catalog.Application.Exceptions;
 using FC.CodeFlix.Catalog.Application.Interfaces;
+using FC.CodeFlix.Catalog.Application.UseCases.Video.Common;
 using FC.CodeFlix.Catalog.Domain.Exceptions;
 using FC.CodeFlix.Catalog.Domain.Repository;
 using FC.CodeFlix.Catalog.Domain.Validation;
@@ -32,7 +33,7 @@ public class CreateVideo : ICreateVideo
         _storageService = storageService;
     }
 
-    public async Task<CreateVideoOutput> Handle(CreateVideoInput input, CancellationToken cancellationToken)
+    public async Task<VideoModelOutput> Handle(CreateVideoInput input, CancellationToken cancellationToken)
     {
         var video = new DomainEntity.Video(
             input.Title,
@@ -60,7 +61,7 @@ public class CreateVideo : ICreateVideo
             await _videoRepository.Insert(video, cancellationToken);
             await _unitOfWork.Commit(cancellationToken);
 
-            return CreateVideoOutput.FromVideo(video);
+            return VideoModelOutput.FromVideo(video);
         }
         catch (Exception)
         {

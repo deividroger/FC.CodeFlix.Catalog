@@ -1,8 +1,8 @@
-﻿using FC.CodeFlix.Catalog.Application.Common;
-using FC.CodeFlix.Catalog.Application.Exceptions;
+﻿using FC.CodeFlix.Catalog.Application.Exceptions;
 using FC.CodeFlix.Catalog.Application.Interfaces;
 using FC.CodeFlix.Catalog.Application.UseCases.Video.CreateVideo;
 using FC.CodeFlix.Catalog.Domain.Exceptions;
+using FC.CodeFlix.Catalog.Domain.Extensions;
 using FC.CodeFlix.Catalog.Domain.Repository;
 using FC.CodeFlix.Catalog.Domain.Validation;
 using FluentAssertions;
@@ -70,7 +70,7 @@ public class CreateVideoTest
         output.Published.Should().Be(input.Published);
         output.Opened.Should().Be(input.Opened);
         output.Duration.Should().Be(input.Duration);
-        output.Rating.Should().Be(input.Rating);
+        output.Rating.Should().Be(input.Rating.ToStringSignal());
         output.CreatedAt.Should().NotBe(default);
 
     }
@@ -148,12 +148,12 @@ public class CreateVideoTest
         output.Published.Should().Be(input.Published);
         output.Opened.Should().Be(input.Opened);
         output.Duration.Should().Be(input.Duration);
-        output.Rating.Should().Be(input.Rating);
+        output.Rating.Should().Be(input.Rating.ToStringSignal());
         output.CreatedAt.Should().NotBe(default);
 
-        output.Thumb.Should().Be(expectedThumbName);
-        output.ThumbHalf.Should().Be(expectedThumbHalfName);
-        output.Banner.Should().Be(expectedBannerName);
+        output.ThumbFileUrl.Should().Be(expectedThumbName);
+        output.ThumbHalfFileUrl.Should().Be(expectedThumbHalfName);
+        output.BannerFileUrl.Should().Be(expectedBannerName);
 
     }
 
@@ -344,9 +344,9 @@ public class CreateVideoTest
         output.Published.Should().Be(input.Published);
         output.Opened.Should().Be(input.Opened);
         output.Duration.Should().Be(input.Duration);
-        output.Rating.Should().Be(input.Rating);
+        output.Rating.Should().Be(input.Rating.ToStringSignal());
         output.CreatedAt.Should().NotBe(default);
-        output.Thumb.Should().Be(expectedThumbName);
+        output.ThumbFileUrl.Should().Be(expectedThumbName);
 
     }
 
@@ -403,9 +403,9 @@ public class CreateVideoTest
         output.Published.Should().Be(input.Published);
         output.Opened.Should().Be(input.Opened);
         output.Duration.Should().Be(input.Duration);
-        output.Rating.Should().Be(input.Rating);
+        output.Rating.Should().Be(input.Rating.ToStringSignal());
         output.CreatedAt.Should().NotBe(default);
-        output.ThumbHalf.Should().Be(expectedThumbHalfName);
+        output.ThumbHalfFileUrl.Should().Be(expectedThumbHalfName);
 
     }
 
@@ -462,10 +462,10 @@ public class CreateVideoTest
         output.Published.Should().Be(input.Published);
         output.Opened.Should().Be(input.Opened);
         output.Duration.Should().Be(input.Duration);
-        output.Rating.Should().Be(input.Rating);
+        output.Rating.Should().Be(input.Rating.ToStringSignal());
         output.CreatedAt.Should().NotBe(default);
-        output.Thumb.Should().BeNullOrEmpty();
-        output.Banner.Should().Be(expectedBannerName);
+        output.ThumbFileUrl.Should().BeNullOrEmpty();
+        output.BannerFileUrl.Should().Be(expectedBannerName);
 
     }
 
@@ -507,10 +507,15 @@ public class CreateVideoTest
         output.Published.Should().Be(input.Published);
         output.Opened.Should().Be(input.Opened);
         output.Duration.Should().Be(input.Duration);
-        output.Rating.Should().Be(input.Rating);
+        output.Rating.Should().Be(input.Rating.ToStringSignal());
         output.CreatedAt.Should().NotBe(default);
 
-        output.CategoriesIds.Should().BeEquivalentTo(exampleCategoriesIds);
+
+        output.Categories!
+                      .Select(dto => dto.Id)
+                       .ToList().Should().BeEquivalentTo(exampleCategoriesIds);
+
+        
 
         videoRepositoryMock.Verify(x => x.Insert(It.Is<DomainEntity.Video>(
             video =>
@@ -610,11 +615,14 @@ public class CreateVideoTest
         output.Published.Should().Be(input.Published);
         output.Opened.Should().Be(input.Opened);
         output.Duration.Should().Be(input.Duration);
-        output.Rating.Should().Be(input.Rating);
+        output.Rating.Should().Be(input.Rating.ToStringSignal());
         output.CreatedAt.Should().NotBe(default);
 
-        output.GenresIds.Should().BeEquivalentTo(examplesIds);
-        output.CategoriesIds.Should().BeEmpty();
+        output.Categories.Should().BeEmpty();
+
+        output.Genres!
+                  .Select(dto => dto.Id)
+                   .ToList().Should().BeEquivalentTo(examplesIds);
 
         videoRepositoryMock.Verify(x => x.Insert(It.Is<DomainEntity.Video>(
             video =>
@@ -714,13 +722,15 @@ public class CreateVideoTest
         output.Published.Should().Be(input.Published);
         output.Opened.Should().Be(input.Opened);
         output.Duration.Should().Be(input.Duration);
-        output.Rating.Should().Be(input.Rating);
+        output.Rating.Should().Be(input.Rating.ToStringSignal());
         output.CreatedAt.Should().NotBe(default);
 
-        output.GenresIds.Should().BeEmpty();
-        output.CategoriesIds.Should().BeEmpty();
+        output.Categories.Should().BeEmpty();
+        output.Categories.Should().BeEmpty();
 
-        output.CastMembersIds.Should().BeEquivalentTo(examplesIds);
+        output.CastMembers!
+                  .Select(dto => dto.Id)
+                   .ToList().Should().BeEquivalentTo(examplesIds);
 
         videoRepositoryMock.Verify(x => x.Insert(It.Is<DomainEntity.Video>(
             video =>
@@ -866,9 +876,9 @@ public class CreateVideoTest
         output.Published.Should().Be(input.Published);
         output.Opened.Should().Be(input.Opened);
         output.Duration.Should().Be(input.Duration);
-        output.Rating.Should().Be(input.Rating);
+        output.Rating.Should().Be(input.Rating.ToStringSignal());
         output.CreatedAt.Should().NotBe(default);
-        output.Media.Should().Be(expectedMediaName);
+        output.VideoFileUrl.Should().Be(expectedMediaName);
 
     }
 
@@ -926,9 +936,9 @@ public class CreateVideoTest
         output.Published.Should().Be(input.Published);
         output.Opened.Should().Be(input.Opened);
         output.Duration.Should().Be(input.Duration);
-        output.Rating.Should().Be(input.Rating);
+        output.Rating.Should().Be(input.Rating.ToStringSignal());
         output.CreatedAt.Should().NotBe(default);
-        output.Trailer.Should().Be(expectedTrailerName);
+        output.TrailerFileUrl.Should().Be(expectedTrailerName);
 
     }
 }
