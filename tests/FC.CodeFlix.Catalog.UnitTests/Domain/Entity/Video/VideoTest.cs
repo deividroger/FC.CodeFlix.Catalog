@@ -120,6 +120,72 @@ public class VideoTest
 
     }
 
+    [Fact(DisplayName = nameof(UpdateWithRating))]
+    [Trait("Domain", "Video - Aggregate")]
+    public void UpdateWithRating()
+    {
+        var expectedTitle = _fixture.GetValidTitle();
+        var expectedDescription = _fixture.GetValidDescription();
+        var expectedYearLaunched = _fixture.GetValidYearLaunched();
+        var expectedOpened = _fixture.GetRandomBoolean();
+        var expectedPublished = _fixture.GetRandomBoolean();
+        var expectedDuration = _fixture.GetValidDuration();
+        var expectedRating = _fixture.GetRandomRating();
+
+        var video = _fixture.GetValidVideo();
+
+        video.Update(expectedTitle, 
+                     expectedDescription, 
+                     expectedYearLaunched, 
+                     expectedOpened, 
+                     expectedPublished,
+                     expectedDuration,
+                     expectedRating);
+
+
+        video.Title.Should().Be(expectedTitle);
+        video.Description.Should().Be(expectedDescription);
+        video.Opened.Should().Be(expectedOpened);
+        video.Published.Should().Be(expectedPublished);
+        video.YearLaunched.Should().Be(expectedYearLaunched);
+        video.Duration.Should().Be(expectedDuration);
+        video.Rating.Should().Be(expectedRating);
+
+    }
+
+    [Fact(DisplayName = nameof(UpdateWithoutRatingDoesntChangeTheRating))]
+    [Trait("Domain", "Video - Aggregate")]
+    public void UpdateWithoutRatingDoesntChangeTheRating()
+    {
+        var expectedTitle = _fixture.GetValidTitle();
+        var expectedDescription = _fixture.GetValidDescription();
+        var expectedYearLaunched = _fixture.GetValidYearLaunched();
+        var expectedOpened = _fixture.GetRandomBoolean();
+        var expectedPublished = _fixture.GetRandomBoolean();
+        var expectedDuration = _fixture.GetValidDuration();
+        
+
+        var video = _fixture.GetValidVideo();
+
+        var expectedRating = video.Rating;
+
+        video.Update(expectedTitle,
+                     expectedDescription,
+                     expectedYearLaunched,
+                     expectedOpened,
+                     expectedPublished,
+                     expectedDuration);
+
+        video.Title.Should().Be(expectedTitle);
+        video.Description.Should().Be(expectedDescription);
+        video.Opened.Should().Be(expectedOpened);
+        video.Published.Should().Be(expectedPublished);
+        video.YearLaunched.Should().Be(expectedYearLaunched);
+        video.Duration.Should().Be(expectedDuration);
+        video.Rating.Should().Be(expectedRating);
+
+    }
+
     [Fact(DisplayName = nameof(ValidateStillValidationAfterUpdateToValidState))]
     [Trait("Domain", "Video - Aggregate")]
     public void ValidateStillValidationAfterUpdateToValidState()
