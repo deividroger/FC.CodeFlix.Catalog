@@ -123,13 +123,14 @@ public class GenreRepository : IGenreRepository
                 .ThenBy(x => x.Id)
   };
 
-    public Task<IReadOnlyList<Guid>> GetIdsListByIds(List<Guid> ids, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IReadOnlyList<Guid>> GetIdsListByIds(List<Guid> ids, CancellationToken cancellationToken)
+        => await _genres.AsNoTracking()
+                        .Where(genreId => ids.Contains(genreId.Id))
+                        .Select(genreId => genreId.Id)
+                        .ToListAsync(cancellationToken);
 
-    public Task<IReadOnlyList<Genre>> GetListByIds(List<Guid> ids, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IReadOnlyList<Genre>> GetListByIds(List<Guid> ids, CancellationToken cancellationToken)
+        => await _genres.AsNoTracking()
+                        .Where(genreId => ids.Contains(genreId.Id))
+                        .ToListAsync(cancellationToken);
 }

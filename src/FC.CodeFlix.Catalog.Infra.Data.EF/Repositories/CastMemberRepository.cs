@@ -74,13 +74,14 @@ public class CastMemberRepository : ICastMemberRepository
         return Task.FromResult(_castMembers.Update(aggregate));
     }
 
-    public Task<IReadOnlyList<Guid>> GetIdsListByIds(List<Guid> ids, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IReadOnlyList<Guid>> GetIdsListByIds(List<Guid> ids, CancellationToken cancellationToken)
+      => await _castMembers.AsNoTracking()
+                        .Where(castMemberId => ids.Contains(castMemberId.Id))
+                        .Select(castMemberId => castMemberId.Id)
+                        .ToListAsync(cancellationToken);
 
-    public Task<IReadOnlyList<CastMember>> GetListByIds(List<Guid> ids, CancellationToken cancellationToken)
-    {
-        throw new NotImplementedException();
-    }
+    public async Task<IReadOnlyList<CastMember>> GetListByIds(List<Guid> ids, CancellationToken cancellationToken)
+         => await _castMembers.AsNoTracking()
+                        .Where(castMemberId => ids.Contains(castMemberId.Id))
+                        .ToListAsync(cancellationToken);
 }

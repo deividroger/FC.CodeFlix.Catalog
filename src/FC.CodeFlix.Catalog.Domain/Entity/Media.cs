@@ -1,8 +1,7 @@
 ﻿using FC.CodeFlix.Catalog.Domain.Enum;
-
 namespace FC.CodeFlix.Catalog.Domain.Entity;
 
-public class Media
+public class Media: SeedWork.Entity
 {
     public string FilePath { get; private set; }
 
@@ -10,7 +9,7 @@ public class Media
 
     public MediaStatus   Status { get; private set; }
 
-    public Media(string filePath )
+    public Media(string filePath ):base()
     {
         FilePath = filePath;
         Status = MediaStatus.Pending;

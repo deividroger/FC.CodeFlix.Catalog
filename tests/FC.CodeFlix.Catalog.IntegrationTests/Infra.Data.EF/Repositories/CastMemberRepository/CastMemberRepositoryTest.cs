@@ -328,4 +328,161 @@ public class CastMemberRepositoryTest
             
         }
     }
+
+    [Fact(DisplayName = nameof(GetIdsListByIds))]
+    [Trait("Integration/Infra.Data", "CastMemberRepository - Repositories")]
+    public async Task GetIdsListByIds()
+    {
+        var arrageDbContext = _fixture.CreateDbContext();
+
+        var exampleCastMemberList = _fixture.GetExampleCastMemberList(10);
+
+        await arrageDbContext.AddRangeAsync(exampleCastMemberList);
+        await arrageDbContext.SaveChangesAsync(CancellationToken.None);
+
+        var actDbContext = _fixture.CreateDbContext(true);
+
+        var castMemberRepository = new Repository.CastMemberRepository(actDbContext);
+
+        var idsToGet = new List<Guid> {
+            exampleCastMemberList[2].Id,
+            exampleCastMemberList[3].Id,
+        };
+
+        var result = await castMemberRepository.GetIdsListByIds(idsToGet, CancellationToken.None);
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(idsToGet.Count);
+        result.Should().BeEquivalentTo(idsToGet);
+    }
+
+
+    [Fact(DisplayName = nameof(GetIdsListByIdWhenOnlyThreeIdsMatchs))]
+    [Trait("Integration/Infra.Data", "CastMemberRepository - Repositories")]
+    public async Task GetIdsListByIdWhenOnlyThreeIdsMatchs()
+    {
+        var arrageDbContext = _fixture.CreateDbContext();
+
+        var exampleCastMemberList = _fixture.GetExampleCastMemberList(10);
+
+        await arrageDbContext.AddRangeAsync(exampleCastMemberList);
+        await arrageDbContext.SaveChangesAsync(CancellationToken.None);
+
+        var actDbContext = _fixture.CreateDbContext(true);
+
+        var castMemberRepository = new Repository.CastMemberRepository(actDbContext);
+
+        var idsToGet = new List<Guid> {
+            exampleCastMemberList[3].Id,
+            exampleCastMemberList[4].Id,
+            exampleCastMemberList[5].Id,
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        };
+
+        var idsExpectedToReturn = new List<Guid> {
+            exampleCastMemberList[3].Id,
+            exampleCastMemberList[4].Id,
+            exampleCastMemberList[5].Id
+        };
+
+
+        var result = await castMemberRepository.GetIdsListByIds(idsToGet, CancellationToken.None);
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(3);
+        result.Should().NotBeEquivalentTo(idsToGet);
+        result.Should().BeEquivalentTo(idsExpectedToReturn);
+    }
+
+
+    [Fact(DisplayName = nameof(GetListByIds))]
+    [Trait("Integration/Infra.Data", "CastMemberRepository - Repositories")]
+    public async Task GetListByIds()
+    {
+        var arrageDbContext = _fixture.CreateDbContext();
+
+        var exampleGenreList = _fixture.GetExampleCastMemberList(10);
+
+        await arrageDbContext.AddRangeAsync(exampleGenreList);
+        await arrageDbContext.SaveChangesAsync(CancellationToken.None);
+
+        var actDbContext = _fixture.CreateDbContext(true);
+
+        var castMemberRepository = new Repository.CastMemberRepository(actDbContext);
+
+        var idsToGet = new List<Guid> {
+            exampleGenreList[3].Id,
+            exampleGenreList[4].Id,
+            exampleGenreList[5].Id,
+        };
+
+        var result = await castMemberRepository.GetListByIds(idsToGet, CancellationToken.None);
+
+        result.Should().NotBeNull();
+
+        result.Should().HaveCount(idsToGet.Count);
+
+        idsToGet.ForEach(id =>
+        {
+            var example = exampleGenreList.FirstOrDefault(x => x.Id == id);
+            var resultItem = result.FirstOrDefault(x => x.Id == id);
+            example.Should().NotBeNull();
+            resultItem.Should().NotBeNull();
+            resultItem!.Name.Should().Be(example!.Name);
+            resultItem!.Id.Should().Be(example!.Id);
+            resultItem!.Type.Should().Be(example!.Type);
+            resultItem!.CreatedAt.Should().Be(example!.CreatedAt);
+        });
+    }
+
+    [Fact(DisplayName = nameof(GetListByIdsdWhenOnlyThreeIdsMatchs))]
+    [Trait("Integration/Infra.Data", "CastMemberRepository - Repositories")]
+    public async Task GetListByIdsdWhenOnlyThreeIdsMatchs()
+    {
+        var arrageDbContext = _fixture.CreateDbContext();
+
+        var exampleCastMemberList = _fixture.GetExampleCastMemberList(10);
+
+        await arrageDbContext.AddRangeAsync(exampleCastMemberList);
+        await arrageDbContext.SaveChangesAsync(CancellationToken.None);
+
+        var actDbContext = _fixture.CreateDbContext(true);
+
+        var castMemberRepository = new Repository.CastMemberRepository(actDbContext);
+
+        var idsToGet = new List<Guid> {
+            exampleCastMemberList[3].Id,
+            exampleCastMemberList[4].Id,
+            exampleCastMemberList[5].Id,
+            Guid.NewGuid(),
+            Guid.NewGuid()
+        };
+
+        var idsExpectedToGet = new List<Guid> {
+            exampleCastMemberList[3].Id,
+            exampleCastMemberList[4].Id,
+            exampleCastMemberList[5].Id
+        };
+
+
+        var result = await castMemberRepository.GetListByIds(idsToGet, CancellationToken.None);
+
+        result.Should().NotBeNull();
+        result.Should().HaveCount(idsExpectedToGet.Count);
+        result.Should().NotBeEquivalentTo(idsToGet);
+
+
+        idsExpectedToGet.ForEach(id =>
+        {
+            var example = exampleCastMemberList.FirstOrDefault(x => x.Id == id);
+            var resultItem = result.FirstOrDefault(x => x.Id == id);
+            example.Should().NotBeNull();
+            resultItem.Should().NotBeNull();
+            resultItem!.Name.Should().Be(example!.Name);
+            resultItem!.Id.Should().Be(example!.Id);
+            resultItem!.Type.Should().Be(example!.Type);
+            resultItem!.CreatedAt.Should().Be(example!.CreatedAt);
+        });
+    }
 }

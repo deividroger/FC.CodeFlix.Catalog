@@ -13,8 +13,6 @@ public class CastMemberTestFixture : BaseFixture
     public DomainEntity.CastMember GetExampleCastMember()
         => new(GetValidName(), GetRandomCastMemberType());
 
-
-
     public string GetValidName()
         => Faker.Name.FullName();
 

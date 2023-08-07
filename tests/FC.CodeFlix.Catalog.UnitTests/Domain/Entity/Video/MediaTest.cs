@@ -2,6 +2,8 @@
 using FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.Enum;
 using FluentAssertions;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
+using System.Threading;
 using Xunit;
 
 namespace FC.CodeFlix.Catalog.UnitTests.Domain.Entity.Video;
@@ -18,9 +20,10 @@ public class MediaTest
     public void Instantiate()
     {
         var expectedFilePath = _fixture.GetValidMediaPath();
-
         var media = new Media(expectedFilePath);
+    
 
+        media.Id.Should().NotBeEmpty();
         media.FilePath.Should().Be(expectedFilePath);
         media.Status.Should().Be(MediaStatus.Pending);  
 
