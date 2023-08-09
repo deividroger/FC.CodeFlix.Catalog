@@ -76,14 +76,14 @@ public class CreateVideo : ICreateVideo
         if(input.Media is not null)
         {
             var fileName = StorageFileName.Create(video.Id,nameof(video.Media), input.Media.Extension);
-            var mediaUrl =  await _storageService.Upload(fileName, input.Media.FileStream, cancellationToken);
+            var mediaUrl =  await _storageService.Upload(fileName, input.Media.FileStream,input.Media.ContentType, cancellationToken);
             video.UpdateMedia(mediaUrl);
         }
 
         if (input.Trailer is not null)
         {
             var fileName = StorageFileName.Create(video.Id, nameof(video.Trailer), input.Trailer.Extension);
-            var trailerUrl = await _storageService.Upload(fileName, input.Trailer.FileStream, cancellationToken);
+            var trailerUrl = await _storageService.Upload(fileName, input.Trailer.FileStream, input.Trailer.ContentType, cancellationToken);
             video.UpdateTrailer(trailerUrl);
         }
     }
@@ -113,6 +113,7 @@ public class CreateVideo : ICreateVideo
             var thumbUrl = await _storageService.Upload(
                    fileName,
                    input.Thumb.FileStream,
+                   input.Thumb.ContentType,
                    cancellationToken);
 
             video.UpdateThumb(thumbUrl);
@@ -125,6 +126,7 @@ public class CreateVideo : ICreateVideo
             var bannerUrl = await _storageService.Upload(
                    fileName,
                    input.Banner.FileStream,
+                   input.Banner.ContentType,
                    cancellationToken);
 
             video.UpdateBanner(bannerUrl);
@@ -137,6 +139,7 @@ public class CreateVideo : ICreateVideo
             var thumbHalfUrl = await _storageService.Upload(
                    fileName,
                    input.ThumbHalf.FileStream,
+                   input.ThumbHalf.ContentType,
                    cancellationToken);
 
             video.UpdateThumbHalf(thumbHalfUrl);

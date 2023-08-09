@@ -78,6 +78,7 @@ public class UpdateVideo : IUpdateVideo
             var bannerUrl = await _storageService.Upload(
                    fileName,
                    input.Banner.FileStream,
+                   input.Banner.ContentType,
                    cancellationToken);
 
             video.UpdateBanner(bannerUrl);
@@ -90,6 +91,7 @@ public class UpdateVideo : IUpdateVideo
             var thumbUrl = await _storageService.Upload(
                    fileName,
                    input.Thumb.FileStream,
+                   input.Thumb.ContentType,
                    cancellationToken);
 
             video.UpdateThumb(thumbUrl);
@@ -103,6 +105,7 @@ public class UpdateVideo : IUpdateVideo
             var thumbHalfUrl = await _storageService.Upload(
                    fileName,
                    input.ThumbHalf.FileStream,
+                   input.ThumbHalf.ContentType,
                    cancellationToken);
 
             video.UpdateThumbHalf(thumbHalfUrl);

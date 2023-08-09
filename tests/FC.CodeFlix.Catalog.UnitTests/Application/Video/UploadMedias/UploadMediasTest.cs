@@ -60,6 +60,7 @@ public class UploadMediasTest
                 x => x.Upload(
                     It.IsAny<string>(),
                     It.IsAny<Stream>(),
+                    It.IsAny<string>(),
                     It.IsAny<CancellationToken>())
             ).ReturnsAsync(Guid.NewGuid().ToString());
 
@@ -71,6 +72,7 @@ public class UploadMediasTest
             x.Upload(
                 It.Is<string>(x => fileNames.Contains(x)),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
             It.IsAny<CancellationToken>())
             , Times.Exactly(2));
 
@@ -102,6 +104,7 @@ public class UploadMediasTest
                 x => x.Upload(
                     It.Is<string>(x => x == videoFileName),
                     It.IsAny<Stream>(),
+                    It.IsAny<string>(),
                     It.IsAny<CancellationToken>())
             ).ReturnsAsync(videoStoragePath);
 
@@ -109,6 +112,7 @@ public class UploadMediasTest
                 x => x.Upload(
                     It.Is<string>(x => x == trailerFileName),
                     It.IsAny<Stream>(),
+                    It.IsAny<string>(),
                     It.IsAny<CancellationToken>())
             ).ThrowsAsync(new Exception("error in upload"));
 
@@ -122,6 +126,7 @@ public class UploadMediasTest
             x.Upload(
                 It.Is<string>(x => fileNames.Contains(x)),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
             It.IsAny<CancellationToken>())
             , Times.Exactly(2));
         
@@ -161,6 +166,7 @@ public class UploadMediasTest
                 x => x.Upload(
                     It.Is<string>(x => x == videoFileName),
                     It.IsAny<Stream>(),
+                    It.IsAny<string>(),
                     It.IsAny<CancellationToken>())
             ).ReturnsAsync(videoStoragePath);
 
@@ -168,6 +174,7 @@ public class UploadMediasTest
                 x => x.Upload(
                     It.Is<string>(x => x == trailerFileName),
                     It.IsAny<Stream>(),
+                    It.IsAny<string>(),
                     It.IsAny<CancellationToken>())
             ).ReturnsAsync(trailerStoragePath);
 
@@ -186,6 +193,7 @@ public class UploadMediasTest
             x.Upload(
                 It.Is<string>(x => fileNames.Contains(x)),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
             It.IsAny<CancellationToken>())
             , Times.Exactly(2));
 
@@ -220,6 +228,7 @@ public class UploadMediasTest
                 x => x.Upload(
                     It.IsAny<string>(),
                     It.IsAny<Stream>(),
+                    It.IsAny<string>(),
                     It.IsAny<CancellationToken>())
             ).ReturnsAsync(Guid.NewGuid().ToString());
 
@@ -227,6 +236,7 @@ public class UploadMediasTest
                 x => x.Upload(
                     It.Is<string>(x => x == videoFileName),
                     It.IsAny<Stream>(),
+                    It.IsAny<string>(),
                     It.IsAny<CancellationToken>())
             ).ReturnsAsync(videoStoragePath);
 
@@ -243,6 +253,7 @@ public class UploadMediasTest
             x.Upload(
                 It.Is<string>(x => x == videoFileName),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
             It.IsAny<CancellationToken>())
             , Times.Once);
 
@@ -251,6 +262,7 @@ public class UploadMediasTest
             x.Upload(
                 It.IsAny<string>(),
                 It.IsAny<Stream>(),
+                It.IsAny<string>(),
             It.IsAny<CancellationToken>())
             , Times.Once);
 

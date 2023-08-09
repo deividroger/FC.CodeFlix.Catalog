@@ -56,7 +56,7 @@ public class UploadMedias : IUploadMedias
         {
             var fileName = StorageFileName.Create(video.Id, nameof(video.Trailer), input.TrailerFile.Extension);
 
-            var uploadedFilePath = await _storageService.Upload(fileName, input.TrailerFile.FileStream, cancellationToken);
+            var uploadedFilePath = await _storageService.Upload(fileName, input.TrailerFile.FileStream,input.TrailerFile.ContentType, cancellationToken);
 
             video.UpdateTrailer(uploadedFilePath);
 
@@ -69,11 +69,10 @@ public class UploadMedias : IUploadMedias
         {
             var fileName = StorageFileName.Create(video.Id, nameof(video.Media), input.VideoFile.Extension);
 
-            var uploadedFilePath = await _storageService.Upload(fileName, input.VideoFile.FileStream, cancellationToken);
+            var uploadedFilePath = await _storageService.Upload(fileName, input.VideoFile.FileStream,input.VideoFile.ContentType, cancellationToken);
 
             video.UpdateMedia(uploadedFilePath);
 
         }
     }
 }
-

@@ -91,18 +91,21 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
             It.Is<string>(x => x.EndsWith("-banner.jpg")),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(expectedBannerName);
 
         storageServiceMock.Setup(x => x.Upload(
             It.Is<string>(x => x.EndsWith("-thumb.jpg")),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(expectedThumbName);
 
         storageServiceMock.Setup(x => x.Upload(
             It.Is<string>(x => x.EndsWith("-thumbhalf.jpg")),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(expectedThumbHalfName);
 
@@ -166,6 +169,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
             It.IsAny<string>(),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ThrowsAsync(new Exception("Error on upload"));
 
@@ -196,18 +200,21 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
             It.Is<string>(x => x.EndsWith("-banner.jpg")),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync("banner.jpg");
 
         storageServiceMock.Setup(x => x.Upload(
             It.Is<string>(x => x.EndsWith("-thumb.jpg")),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync("thumb.jpg");
 
         storageServiceMock.Setup(x => x.Upload(
             It.Is<string>(x => x.EndsWith("-thumbhalf.jpg")),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ThrowsAsync(new Exception("Error on upload"));
 
@@ -255,12 +262,14 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
             It.Is<string>(x => x.EndsWith($"media.{input.Media!.Extension}")),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(storageMediaPath);
 
         storageServiceMock.Setup(x => x.Upload(
             It.Is<string>(x => x.EndsWith($"trailer.{input.Trailer!.Extension}")),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(storageTrailerPath);
 
@@ -303,6 +312,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
             It.IsAny<string>(),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(expectedThumbName);
 
@@ -363,6 +373,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
             It.IsAny<string>(),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(expectedThumbHalfName);
 
@@ -422,6 +433,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
             It.IsAny<string>(),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(expectedBannerName);
 
@@ -836,6 +848,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
             It.IsAny<string>(),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(expectedMediaName);
 
@@ -896,6 +909,7 @@ public class CreateVideoTest
         storageServiceMock.Setup(x => x.Upload(
             It.IsAny<string>(),
             It.IsAny<Stream>(),
+            It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(expectedTrailerName);
 
