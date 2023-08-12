@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using FluentAssertions;
 using System;
 using FC.CodeFlix.Catalog.Application.Exceptions;
+using FC.CodeFlix.Catalog.Application;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Category.DeleteCategory;
 
@@ -25,8 +28,18 @@ public class DeleteCategoryTest
     {
         var dbContext = _fixture.CreateDbContext();
 
+        
         var repositoryMock = new CategoryRepository(dbContext);
-        var unitOfWork = new UnitOfWork(dbContext);
+
+
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddLogging();
+
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+        var eventPublisher = new DomainEventPublisher(serviceProvider);
+        var logger = serviceProvider.GetRequiredService<ILogger<UnitOfWork>>();
+
+        var unitOfWork = new UnitOfWork(dbContext, eventPublisher, logger);
 
 
         var categoryExample = _fixture.GetExampleCategory();
@@ -62,7 +75,15 @@ public class DeleteCategoryTest
         var dbContext = _fixture.CreateDbContext();
 
         var repositoryMock = new CategoryRepository(dbContext);
-        var unitOfWork = new UnitOfWork(dbContext);
+
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddLogging();
+
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+        var eventPublisher = new DomainEventPublisher(serviceProvider);
+        var logger = serviceProvider.GetRequiredService<ILogger<UnitOfWork>>();
+
+        var unitOfWork = new UnitOfWork(dbContext, eventPublisher, logger);
 
         var exampleList = _fixture.GetExampleCategoriesList();
 

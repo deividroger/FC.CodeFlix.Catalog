@@ -1,4 +1,5 @@
 ﻿using FC.CodeFlix.Catalog.Domain.Enum;
+using FC.CodeFlix.Catalog.Domain.Events;
 using FC.CodeFlix.Catalog.Domain.Exceptions;
 using FC.CodeFlix.Catalog.Domain.SeedWork;
 using FC.CodeFlix.Catalog.Domain.Validation;
@@ -9,8 +10,6 @@ namespace FC.CodeFlix.Catalog.Domain.Entity;
 
 public class Video : AggregateRoot
 {
-
-
     public string Title { get; private set; }
     public string Description { get; private set; }
     public int YearLaunched { get; private set; }
@@ -90,8 +89,11 @@ public class Video : AggregateRoot
     public void UpdateBanner(string path)
         => Banner = new Image(path);
 
-    public void UpdateMedia(string validPath)
-        => Media = new Media(validPath);
+    public void UpdateMedia(string path)
+    {
+        Media = new Media(path);
+        RaiseEvent(new VideoUploadedEvent(Id, path));
+    }
 
     public void UpdateTrailer(string validPath)
         => Trailer = new Media(validPath);

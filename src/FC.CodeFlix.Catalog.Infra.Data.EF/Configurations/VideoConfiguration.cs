@@ -46,5 +46,7 @@ internal class VideoConfiguration
         builder.HasOne(x => x.Trailer)
             .WithOne()
             .HasForeignKey<Media>();
+
+        builder.Ignore(builder => builder.Events);
     }
 }

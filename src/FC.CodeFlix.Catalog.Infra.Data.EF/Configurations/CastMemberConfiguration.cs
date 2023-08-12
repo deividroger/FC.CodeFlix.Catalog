@@ -4,13 +4,10 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace FC.CodeFlix.Catalog.Infra.Data.EF.Configurations;
 
-internal class GenreConfiguration
-    : IEntityTypeConfiguration<Genre>
+public class CastMemberConfiguration : IEntityTypeConfiguration<CastMember>
 {
-    public void Configure(EntityTypeBuilder<Genre> builder)
+    public void Configure(EntityTypeBuilder<CastMember> builder)
     {
-        builder.HasKey(genre => genre.Id);
-
         builder.Ignore(builder => builder.Events);
     }
 }

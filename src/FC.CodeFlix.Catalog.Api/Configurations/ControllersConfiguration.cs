@@ -1,5 +1,5 @@
-﻿using FC.CodeFlix.Catalog.Api.Configurations.Polices;
-using FC.CodeFlix.Catalog.Api.Filters;
+﻿using FC.CodeFlix.Catalog.Api.Filters;
+using FC.CodeFlix.Catalog.Infra.Messaging.JsonPolicies;
 
 namespace FC.CodeFlix.Catalog.Api.Configurations;
 

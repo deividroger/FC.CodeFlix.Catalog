@@ -1,9 +1,12 @@
-﻿using FC.CodeFlix.Catalog.Application.Exceptions;
+﻿using FC.CodeFlix.Catalog.Application;
+using FC.CodeFlix.Catalog.Application.Exceptions;
 using FC.CodeFlix.Catalog.Infra.Data.EF;
 using FC.CodeFlix.Catalog.Infra.Data.EF.Models;
 using FC.CodeFlix.Catalog.Infra.Data.EF.Repositories;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading;
@@ -37,7 +40,14 @@ namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Genre.Delete
 
             var input = new UseCase.DeleteGenreInput(targetGenre.Id);
 
-            var useCase = new UseCase.DeleteGenre(repository, new UnitOfWork(actDbContext));
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging();
+
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var eventPublisher = new DomainEventPublisher(serviceProvider);
+            var logger = serviceProvider.GetRequiredService<ILogger<UnitOfWork>>();
+
+            var useCase = new UseCase.DeleteGenre(repository, new UnitOfWork(actDbContext, eventPublisher, logger));
 
              await useCase.Handle(input,CancellationToken.None);
 
@@ -67,7 +77,14 @@ namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Genre.Delete
 
             var input = new UseCase.DeleteGenreInput(randomGuid);
 
-            var useCase = new UseCase.DeleteGenre(repository, new UnitOfWork(actDbContext));
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging();
+
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var eventPublisher = new DomainEventPublisher(serviceProvider);
+            var logger = serviceProvider.GetRequiredService<ILogger<UnitOfWork>>();
+
+            var useCase = new UseCase.DeleteGenre(repository, new UnitOfWork(actDbContext, eventPublisher, logger));
 
             var action =  async () =>  await useCase.Handle(input, CancellationToken.None);
 
@@ -106,7 +123,14 @@ namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Genre.Delete
 
             var input = new UseCase.DeleteGenreInput(targetGenre.Id);
 
-            var useCase = new UseCase.DeleteGenre(repository, new UnitOfWork(actDbContext));
+            var serviceCollection = new ServiceCollection();
+            serviceCollection.AddLogging();
+
+            var serviceProvider = serviceCollection.BuildServiceProvider();
+            var eventPublisher = new DomainEventPublisher(serviceProvider);
+            var logger = serviceProvider.GetRequiredService<ILogger<UnitOfWork>>();
+
+            var useCase = new UseCase.DeleteGenre(repository, new UnitOfWork(actDbContext, eventPublisher, logger));
 
             await useCase.Handle(input, CancellationToken.None);
 

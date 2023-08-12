@@ -1,4 +1,5 @@
 ﻿using FC.CodeFlix.Catalog.Domain.Entity;
+using FC.CodeFlix.Catalog.Domain.SeedWork;
 using FC.CodeFlix.Catalog.Infra.Data.EF.Configurations;
 using FC.CodeFlix.Catalog.Infra.Data.EF.Models;
 using Microsoft.EntityFrameworkCore;
@@ -41,11 +42,12 @@ public class CodeFlixCatalogDbContext :
         builder.ApplyConfiguration(new GenreConfiguration());
         builder.ApplyConfiguration(new VideoConfiguration());
 
-
         builder.ApplyConfiguration(new GenresCategoriesConfiguration());
         builder.ApplyConfiguration(new VideosCategoriesConfiguration());
         builder.ApplyConfiguration(new VideosGenresConfiguration());
         builder.ApplyConfiguration(new VideosCastMembersConfiguraton());
         builder.ApplyConfiguration(new MediaConfiguration());
+        builder.ApplyConfiguration(new CastMemberConfiguration());
+
     }
 }

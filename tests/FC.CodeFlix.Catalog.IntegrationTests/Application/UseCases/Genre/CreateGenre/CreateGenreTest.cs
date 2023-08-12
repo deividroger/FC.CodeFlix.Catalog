@@ -1,8 +1,11 @@
-﻿using FC.CodeFlix.Catalog.Application.Exceptions;
+﻿using FC.CodeFlix.Catalog.Application;
+using FC.CodeFlix.Catalog.Application.Exceptions;
 using FC.CodeFlix.Catalog.Infra.Data.EF;
 using FC.CodeFlix.Catalog.Infra.Data.EF.Repositories;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading;
@@ -27,8 +30,15 @@ public class CreateGenreTest
         var input = _fixture.GetExampleInput();
         var actDbContext = _fixture.CreateDbContext();
 
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddLogging();
+
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+        var eventPublisher = new DomainEventPublisher(serviceProvider);
+        var logger = serviceProvider.GetRequiredService<ILogger<UnitOfWork>>();
+
         var createGenre = new GenreCreateGenre.CreateGenre(new GenreRepository(actDbContext),
-                                                           new UnitOfWork(actDbContext), 
+                                                           new UnitOfWork(actDbContext, eventPublisher, logger), 
                                                            new CategoryRepository(actDbContext));
 
         var output = await createGenre.Handle(input, CancellationToken.None);
@@ -79,8 +89,15 @@ public class CreateGenreTest
 
         var actDbContext = _fixture.CreateDbContext(true);
 
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddLogging();
+
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+        var eventPublisher = new DomainEventPublisher(serviceProvider);
+        var logger = serviceProvider.GetRequiredService<ILogger<UnitOfWork>>();
+
         var createGenre = new GenreCreateGenre.CreateGenre(new GenreRepository(actDbContext),
-                                                           new UnitOfWork(actDbContext), 
+                                                           new UnitOfWork(actDbContext, eventPublisher, logger), 
                                                            new CategoryRepository(actDbContext));
 
         var output = await createGenre.Handle(input, CancellationToken.None);
@@ -149,8 +166,15 @@ public class CreateGenreTest
 
         var actDbContext = _fixture.CreateDbContext(true);
 
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddLogging();
+
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+        var eventPublisher = new DomainEventPublisher(serviceProvider);
+        var logger = serviceProvider.GetRequiredService<ILogger<UnitOfWork>>();
+
         var createGenre = new GenreCreateGenre.CreateGenre(new GenreRepository(actDbContext),
-                                                           new UnitOfWork(actDbContext),
+                                                           new UnitOfWork(actDbContext, eventPublisher, logger),
                                                            new CategoryRepository(actDbContext));
 
         var action = async  () => await createGenre.Handle(input, CancellationToken.None);

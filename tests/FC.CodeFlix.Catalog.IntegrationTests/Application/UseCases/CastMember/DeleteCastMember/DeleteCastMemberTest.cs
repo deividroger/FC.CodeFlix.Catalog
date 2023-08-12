@@ -1,9 +1,12 @@
 ﻿
+using FC.CodeFlix.Catalog.Application;
 using FC.CodeFlix.Catalog.Application.Exceptions;
 using FC.CodeFlix.Catalog.Infra.Data.EF;
 using FC.CodeFlix.Catalog.Infra.Data.EF.Repositories;
 using FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.CastMember.Common;
 using FluentAssertions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Linq;
 using System.Threading;
@@ -33,8 +36,15 @@ public class DeleteCastMemberTest
 
         var actDbContext = _fixture.CreateDbContext(true);
 
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddLogging();
+
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+        var eventPublisher = new DomainEventPublisher(serviceProvider);
+        var logger = serviceProvider.GetRequiredService<ILogger<UnitOfWork>>();
+
         var repository = new CastMemberRepository(actDbContext);
-        var unitOfWork = new UnitOfWork(actDbContext);
+        var unitOfWork = new UnitOfWork(actDbContext,eventPublisher,logger);
 
         var useCase = new UseCase.DeleteCastMember(repository, unitOfWork);
         var input = new UseCase.DeleteCastMemberInput(example.Id);
@@ -55,8 +65,15 @@ public class DeleteCastMemberTest
     {
         var actDbContext = _fixture.CreateDbContext(true);
 
+        var serviceCollection = new ServiceCollection();
+        serviceCollection.AddLogging();
+
+        var serviceProvider = serviceCollection.BuildServiceProvider();
+        var eventPublisher = new DomainEventPublisher(serviceProvider);
+        var logger = serviceProvider.GetRequiredService<ILogger<UnitOfWork>>();
+
         var repository = new CastMemberRepository(actDbContext);
-        var unitOfWork = new UnitOfWork(actDbContext);
+        var unitOfWork = new UnitOfWork(actDbContext, eventPublisher, logger);
         var useCase = new UseCase.DeleteCastMember(repository, unitOfWork);
         var input = new UseCase.DeleteCastMemberInput(Guid.NewGuid());
 

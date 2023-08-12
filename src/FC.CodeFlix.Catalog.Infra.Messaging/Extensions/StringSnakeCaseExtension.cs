@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Serialization;
 
-namespace FC.CodeFlix.Catalog.Api.Extensions.String;
+namespace FC.CodeFlix.Catalog.Infra.Messaging.Extensions;
 
 public static class StringSnakeCaseExtension
 {
