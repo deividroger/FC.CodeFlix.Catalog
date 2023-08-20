@@ -41,11 +41,11 @@ internal class VideoConfiguration
 
         builder.HasOne(x=>x.Media)
             .WithOne()
-            .HasForeignKey<Media>();
+            .HasForeignKey<Video>("MediaId");
         
         builder.HasOne(x => x.Trailer)
             .WithOne()
-            .HasForeignKey<Media>();
+            .HasForeignKey<Video>("TrailerId");
 
         builder.Ignore(builder => builder.Events);
     }

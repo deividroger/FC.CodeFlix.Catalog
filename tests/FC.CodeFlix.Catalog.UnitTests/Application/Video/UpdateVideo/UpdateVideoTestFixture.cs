@@ -14,7 +14,7 @@ public class UpdateVideoTestFixtureCollection : ICollectionFixture<UpdateVideoTe
 
 }
 
-public class UpdateVideoTestFixture : VideoTestFixtureBase
+public class UpdateVideoTestFixture : VideoBaseFixture
 {
     public UseCase.UpdateVideoInput CreateValidInput(
         Guid videoId,

@@ -13,7 +13,7 @@ public class UploadMediasTestFixtureCollection : ICollectionFixture<UploadMedias
 {
 }
 
-public class UploadMediasTestFixture : VideoTestFixtureBase
+public class UploadMediasTestFixture : VideoBaseFixture
 {
     public UseCase.UploadMediasInput GetValidInput(
         Guid? videoId = null,

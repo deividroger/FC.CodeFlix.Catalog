@@ -13,7 +13,7 @@ public class ListVideosTestFixtureCollection : ICollectionFixture<ListVideosTest
 {
 }
 
-public class ListVideosTestFixture : VideoTestFixtureBase
+public class ListVideosTestFixture : VideoBaseFixture
 {
     public List<DomainEntity.Video> CreateExamplesVideosList()
         => Enumerable

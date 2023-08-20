@@ -5,6 +5,7 @@ using FC.CodeFlix.Catalog.EndToEndTests.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -12,7 +13,7 @@ using Xunit;
 namespace FC.CodeFlix.Catalog.EndToEndTests.Api.CastMember.CreateCastMember;
 
 [Collection(nameof(CastMemberApiBaseFixture))]
-public class CreateCastMemberApiTest
+public class CreateCastMemberApiTest: IDisposable
 {
     private readonly CastMemberApiBaseFixture _fixture;
 
@@ -44,7 +45,6 @@ public class CreateCastMemberApiTest
         castMemberInDb.Type.Should().Be(example.Type);
     }
 
-
     [Fact(DisplayName = nameof(ThrownWhenNameIsEmpty))]
     [Trait("EndToEnd/API", "CastMember/Create - Endpoints")]
     public async Task ThrownWhenNameIsEmpty()
@@ -60,5 +60,10 @@ public class CreateCastMemberApiTest
         output.Should().NotBeNull();
         output!.Title.Should().Be("One or more validation errors ocurred");
         output!.Detail.Should().Be("Name should not be empty or null");
+    }
+
+    public void Dispose()
+    {
+        _fixture.CleanPersistence();
     }
 }

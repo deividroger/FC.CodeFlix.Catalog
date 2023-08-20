@@ -232,6 +232,8 @@ public class VideoRepositoryTest
 
         var exampleVideo = _fixture.GetExampleVideo();
 
+        exampleVideo.UpdateTrailer(_fixture.GetValidMediaPath());
+
         await arrangeDbContext.Videos.AddAsync(exampleVideo);
         await arrangeDbContext.SaveChangesAsync();
 

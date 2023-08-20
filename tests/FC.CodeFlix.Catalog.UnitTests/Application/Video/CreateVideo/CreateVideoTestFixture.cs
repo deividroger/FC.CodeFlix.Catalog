@@ -13,7 +13,7 @@ public class CreateVideoTestFixtureCollection : ICollectionFixture<CreateVideoTe
 {
 }
 
-public class CreateVideoTestFixture : VideoTestFixtureBase
+public class CreateVideoTestFixture : VideoBaseFixture
 {
     public CreateVideoInput CreateValidInput(
         List<Guid>? categoriesIds = null,

@@ -12,4 +12,6 @@ public class RabbitMQConfiguration
 
     public string? Exchange { get; set; }
 
+    public int Port { get; set; }
+
 }

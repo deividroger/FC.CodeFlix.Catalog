@@ -8,7 +8,7 @@ public class VideoTestFixtureCollection : ICollectionFixture<VideoTestFixture>
 {
 }
 
-public class VideoTestFixture : VideoTestFixtureBase
+public class VideoTestFixture : VideoBaseFixture
 {
  
 }

@@ -15,7 +15,7 @@ using Repository = FC.CodeFlix.Catalog.Infra.Data.EF.Repositories;
 namespace FC.CodeFlix.Catalog.IntegrationTests.Infra.Data.EF.Repositories.GenreRepository;
 
 [Collection(nameof(GenreRepositoryTestFixture))]
-public class GenreRepositoryTest
+public class GenreRepositoryTest: IDisposable
 {
     private readonly GenreRepositoryTestFixture _fixture;
 
@@ -516,8 +516,6 @@ public class GenreRepositoryTest
     public async Task SearchReturnsEmptyWhenPersistenceIsEmpty()
     {
         
-
-   
         var actDbContext = _fixture.CreateDbContext(true);
         var genreRepository = new Repository.GenreRepository(actDbContext);
 
@@ -908,5 +906,12 @@ public class GenreRepositoryTest
             resultItem!.IsActive.Should().Be(example!.IsActive);
             resultItem!.CreatedAt.Should().Be(example!.CreatedAt);
         });
+    }
+
+    public void Dispose()
+    {
+        var context = _fixture.CreateDbContext();
+        context.Database.EnsureDeleted();
+        context.Database.EnsureCreated();
     }
 }

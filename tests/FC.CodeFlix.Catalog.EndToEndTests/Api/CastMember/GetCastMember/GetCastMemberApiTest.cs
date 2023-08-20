@@ -13,7 +13,7 @@ namespace FC.CodeFlix.Catalog.EndToEndTests.Api.CastMember.GetCastMember;
 
 
 [Collection(nameof(CastMemberApiBaseFixture))]
-public class GetCastMemberApiTest
+public class GetCastMemberApiTest: IDisposable
 {
     private readonly CastMemberApiBaseFixture _fixture;
 
@@ -59,6 +59,11 @@ public class GetCastMemberApiTest
         output.Should().NotBeNull();
         output!.Title.Should().Be("Not Found");
         output.Detail.Should().Be($"Cast Member '{randomGuid} not found.'");
+    }
+
+    public void Dispose()
+    {
+        _fixture.CleanPersistence();
     }
 }
 

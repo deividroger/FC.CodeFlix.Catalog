@@ -10,7 +10,7 @@ namespace FC.CodeFlix.Catalog.UnitTests.Application.Video.GetVideo
 
     }
 
-    public class GetVideoTestFixture: VideoTestFixtureBase
+    public class GetVideoTestFixture: VideoBaseFixture
     {
     }
 }

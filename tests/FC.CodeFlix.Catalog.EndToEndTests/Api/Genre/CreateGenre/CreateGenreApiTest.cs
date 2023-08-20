@@ -13,7 +13,7 @@ using Xunit;
 namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Genre.CreateGenre;
 
 [Collection(nameof(CreateGenreApiTestFixture))]
-public class CreateGenreApiTest
+public class CreateGenreApiTest: IDisposable
 {
     private readonly CreateGenreApiTestFixture _fixture;
 
@@ -41,7 +41,7 @@ public class CreateGenreApiTest
 
         output.Data.Categories.Should().HaveCount(0);
 
-        var genreFromDb = await _fixture.Persistence.GetById(output.Data.Id);
+        var genreFromDb = await _fixture.GenrePersistence.GetById(output.Data.Id);
 
         genreFromDb.Should().NotBeNull();
         genreFromDb!.Name.Should().Be(apiInput.Name);
@@ -81,13 +81,13 @@ public class CreateGenreApiTest
 
         outputRelatedCategoriesIds.Should().BeEquivalentTo(relatedCategories);
 
-        var genreFromDb = await _fixture.Persistence.GetById(output.Data.Id);
+        var genreFromDb = await _fixture.GenrePersistence.GetById(output.Data.Id);
 
         genreFromDb.Should().NotBeNull();
         genreFromDb!.Name.Should().Be(apiInput.Name);
         genreFromDb.IsActive.Should().Be(apiInput.IsActive);
 
-        var relationsFromDb = await _fixture.Persistence.GetGenresCategoriesRelationsById(output.Data.Id);
+        var relationsFromDb = await _fixture.GenrePersistence.GetGenresCategoriesRelationsById(output.Data.Id);
 
         relationsFromDb.Should().NotBeNull();
         relationsFromDb.Should().HaveCount(relatedCategories.Count);
@@ -98,7 +98,7 @@ public class CreateGenreApiTest
 
     }
 
-
+   
     [Fact(DisplayName = nameof(ErrorWithInvalidRelations))]
     [Trait("EndToEnd/API", "Genre/Create - Endpoints")]
     public async Task ErrorWithInvalidRelations()
@@ -126,4 +126,10 @@ public class CreateGenreApiTest
         output.Detail.Should().Be($"Related category Id (or ids) not found : {invalidCategoryId}");
   
     }
+
+    public void Dispose()
+    {
+        _fixture.CleanPersistence();
+    }
+
 }

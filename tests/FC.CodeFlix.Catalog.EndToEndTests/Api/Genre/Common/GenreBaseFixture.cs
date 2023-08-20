@@ -1,5 +1,6 @@
 ﻿using FC.CodeFlix.Catalog.EndToEndTests.Api.Category.Common;
 using FC.CodeFlix.Catalog.EndToEndTests.Base;
+using FC.CodeFlix.Catalog.Infra.Data.EF;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,16 +9,18 @@ namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Genre.Common;
 
 public class GenreBaseFixture : BaseFixture
 {
-    public GenrePersistence Persistence;
+    protected CodeFlixCatalogDbContext DbContext;
+
+    public GenrePersistence GenrePersistence;
 
     public CategoryPersistence CategoryPersistence;
 
     public GenreBaseFixture() : base()
     {
-        var dbContext = CreateDbContext();
+        DbContext = CreateDbContext();
 
-        Persistence = new GenrePersistence(dbContext);
-        CategoryPersistence = new CategoryPersistence(dbContext);
+        GenrePersistence = new GenrePersistence(DbContext);
+        CategoryPersistence = new CategoryPersistence(DbContext);
     }
 
     public DomainEntity.Genre GetExampleGenre(bool? isActive = null, List<Guid>? categoriesIds = null, string? name = null)

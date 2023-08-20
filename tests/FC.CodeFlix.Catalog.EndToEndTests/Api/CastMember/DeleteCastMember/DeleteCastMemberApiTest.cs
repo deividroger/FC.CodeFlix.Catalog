@@ -10,7 +10,7 @@ using Xunit;
 namespace FC.CodeFlix.Catalog.EndToEndTests.Api.CastMember.DeleteCastMember;
 
 [Collection(nameof(CastMemberApiBaseFixture))]
-public class DeleteCastMemberApiTest
+public class DeleteCastMemberApiTest : IDisposable
 {
     private readonly CastMemberApiBaseFixture _fixture;
 
@@ -53,5 +53,10 @@ public class DeleteCastMemberApiTest
         output.Should().NotBeNull();
         output!.Title.Should().Be("Not Found");
         output.Detail.Should().Be($"Cast Member '{randomGuid} not found.'");
+    }
+
+    public void Dispose()
+    {
+        _fixture.CleanPersistence();
     }
 }

@@ -37,6 +37,33 @@ public class VideoRepository : IVideoRepository
         RemoveRelations(video);
 
         await AddRelations(video, cancellationToken);
+        
+        DeleteOrphanMedias(video);
+    }
+
+    private void DeleteOrphanMedias(Video video)
+    {
+        if (_context.Entry(video).Reference(v=> v.Trailer).IsModified)
+        {
+            var oldTrailerId = _context.Entry(video).OriginalValues.GetValue<Guid?>($"{nameof(video.Trailer)}Id");
+
+            if (oldTrailerId != null && oldTrailerId != video.Trailer?.Id)
+            {
+                var oldTrailer = _medias.Find(oldTrailerId);
+                _medias.Remove(oldTrailer!);
+            }
+        }
+
+        if (_context.Entry(video).Reference(v => v.Media).IsModified)
+        {
+            var oldMediaId = _context.Entry(video).OriginalValues.GetValue<Guid?>($"{nameof(video.Media)}Id");
+
+            if (oldMediaId != null && oldMediaId != video.Trailer?.Id)
+            {
+                var oldMedia = _medias.Find(oldMediaId);
+                _medias.Remove(oldMedia!);
+            }
+        }
     }
 
     public Task Delete(Video video, CancellationToken cancellationToken)

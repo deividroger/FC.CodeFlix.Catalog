@@ -30,7 +30,7 @@ public class ListGenresApiTest : IDisposable
         var exampleGenres = _fixture.GetExampleListGenres(10);
         var targetGenre = exampleGenres[5];
 
-        await _fixture.Persistence.InsertList(exampleGenres);
+        await _fixture.GenrePersistence.InsertList(exampleGenres);
 
         var input = new ListGenresInput(1, exampleGenres.Count);
 
@@ -100,7 +100,7 @@ public class ListGenresApiTest : IDisposable
     {
         var exampleGenres = _fixture.GetExampleListGenres(quantityToGenerate);
 
-        await _fixture.Persistence.InsertList(exampleGenres);
+        await _fixture.GenrePersistence.InsertList(exampleGenres);
 
         var input = new ListGenresInput(page, perPage);
 
@@ -162,7 +162,7 @@ public class ListGenresApiTest : IDisposable
            "sci-fi future",
         });
 
-        await _fixture.Persistence.InsertList(exampleGenres);
+        await _fixture.GenrePersistence.InsertList(exampleGenres);
 
         var input = new ListGenresInput(page, perPage, search);
 
@@ -210,7 +210,7 @@ public class ListGenresApiTest : IDisposable
 
         var exampleGenres = _fixture.GetExampleListGenres(10);
 
-        await _fixture.Persistence.InsertList(exampleGenres);
+        await _fixture.GenrePersistence.InsertList(exampleGenres);
 
 
         var orderEnum = order == "asc" ? SearchOrder.ASC : SearchOrder.DESC;
@@ -286,9 +286,9 @@ public class ListGenresApiTest : IDisposable
            )));
 
 
-        await _fixture.Persistence.InsertList(exampleGenres);
+        await _fixture.GenrePersistence.InsertList(exampleGenres);
         await _fixture.CategoryPersistence.InsertList(exampleCategories);
-        await _fixture.Persistence.InsertGenresCategoriesRelationsList(genresCategories);
+        await _fixture.GenrePersistence.InsertGenresCategoriesRelationsList(genresCategories);
 
         var input = new ListGenresInput(1, exampleGenres.Count);
 

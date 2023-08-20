@@ -4,7 +4,7 @@ namespace FC.CodeFlix.Catalog.Domain.Extensions;
 
 public static class RatingExtensions
 {
-    public static Rating ToRating(this string ratingString)
+    public static Rating ToRating(this string? ratingString)
     {
         return ratingString switch
         {

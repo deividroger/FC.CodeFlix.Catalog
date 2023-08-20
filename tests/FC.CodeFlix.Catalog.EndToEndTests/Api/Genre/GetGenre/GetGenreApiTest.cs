@@ -15,7 +15,7 @@ namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Genre.GetGenre;
 
 
 [Collection(nameof(GetGenreApiTestFixture))]
-public class GetGenreApiTest
+public class GetGenreApiTest: IDisposable
 {
     private readonly GetGenreApiTestFixture _fixture;
 
@@ -29,7 +29,7 @@ public class GetGenreApiTest
         var exampleGenre = _fixture.GetExampleListGenres(10);
         var targetGenre = exampleGenre[5];
 
-        await _fixture.Persistence.InsertList(exampleGenre);
+        await _fixture.GenrePersistence.InsertList(exampleGenre);
 
         var (response, output) = await _fixture.ApiClient.Get<ApiResponse<GenreModelOutput>>($"/genres/{targetGenre.Id}");
 
@@ -50,7 +50,7 @@ public class GetGenreApiTest
         var exampleGenre = _fixture.GetExampleListGenres(10);
         var randomGuid = Guid.NewGuid();
 
-        await _fixture.Persistence.InsertList(exampleGenre);
+        await _fixture.GenrePersistence.InsertList(exampleGenre);
 
         var (response, output) = await _fixture.ApiClient.Get<ProblemDetails>($"/genres/{randomGuid}");
 
@@ -102,9 +102,9 @@ public class GetGenreApiTest
            )));
 
 
-        await _fixture.Persistence.InsertList(exampleGenres);
+        await _fixture.GenrePersistence.InsertList(exampleGenres);
         await _fixture.CategoryPersistence.InsertList(exampleCategories);
-        await _fixture.Persistence.InsertGenresCategoriesRelationsList(genresCategories);
+        await _fixture.GenrePersistence.InsertGenresCategoriesRelationsList(genresCategories);
 
         var (response, output) = await _fixture.ApiClient.Get<ApiResponse<GenreModelOutput>>($"/genres/{targetGenre.Id}");
 
@@ -121,4 +121,10 @@ public class GetGenreApiTest
         relatedCategoriesIds.Should().BeEquivalentTo(targetGenre.Categories);
 
     }
+
+    public void Dispose()
+    {
+        _fixture.CleanPersistence();
+    }
+
 }

@@ -2,14 +2,17 @@
 using FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.Enum;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
 
 namespace FC.CodeFlix.Catalog.UnitTests.Common.Fixtures;
 
-public abstract class VideoTestFixtureBase: BaseFixture
+public abstract class VideoBaseFixture: BaseFixture
 {
+    
+
     public Video GetValidVideo()
        => new(
            GetValidTitle(),
@@ -112,4 +115,5 @@ public abstract class VideoTestFixtureBase: BaseFixture
         var fileInput = new FileInput("mp4", exampleStream, "video/mp4");
         return fileInput;
     }
+    
 }

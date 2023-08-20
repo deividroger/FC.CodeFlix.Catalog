@@ -8,6 +8,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Application\UseCases\Genre\NewFolder\**" />
+    <EmbeddedResource Remove="Application\UseCases\Genre\NewFolder\**" />
+    <None Remove="Application\UseCases\Genre\NewFolder\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="FluentAssertions" Version="6.6.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.3" />
@@ -33,10 +39,6 @@
     <None Update="xunit.runner.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Application\UseCases\Genre\NewFolder\" />
   </ItemGroup>
 
 </Project>

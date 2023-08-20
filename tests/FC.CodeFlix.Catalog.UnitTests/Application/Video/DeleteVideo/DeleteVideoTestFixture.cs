@@ -12,7 +12,7 @@ public class DeleteVideoTestFixtureCollection: ICollectionFixture<DeleteVideoTes
 {
 }
 
-public class DeleteVideoTestFixture : VideoTestFixtureBase
+public class DeleteVideoTestFixture : VideoBaseFixture
 {
     public DeleteVideoInput GetValidInput(Guid? id = null)
         => new (id ?? Guid.NewGuid());
