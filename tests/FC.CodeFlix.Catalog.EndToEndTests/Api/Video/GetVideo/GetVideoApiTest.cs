@@ -88,7 +88,7 @@ public class GetVideoApiTest : IDisposable
         response!.StatusCode.Should().Be(HttpStatusCode.NotFound);
 
         output.Should().NotBeNull();
-        output!.Title.Should().Be("Not Found"); 
+        output!.Title.Should().Be("Not Found");
         output.Detail.Should().Be($"Video '{randomId}' not found.");
     }
 
