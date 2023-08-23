@@ -1,7 +1,11 @@
-﻿using FC.CodeFlix.Catalog.Infra.Messaging.JsonPolicies;
+﻿using FC.CodeFlix.Catalog.Application.UseCases.Video.Common;
+using FC.CodeFlix.Catalog.Infra.Messaging.JsonPolicies;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.VisualStudio.TestPlatform.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -76,6 +80,25 @@ public class ApiClient
         return (response, output);
     }
 
+    public async Task<(HttpResponseMessage?, TOutput?)> PostFormData<TOutput>(string route, FileInput file)
+    where TOutput : class
+    {
+        var fileContent = new StreamContent(file.FileStream);
+
+        fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+
+        using var content = new MultipartFormDataContent
+        {
+            { fileContent, "media_file", $"media.{file.Extension}" }
+        };
+
+        var response = await _httpClient.PostAsync(route, content);
+
+        var output = await GetOutput<TOutput>(response);
+
+        return (response, output);
+    }
+
     private async Task<TOutput?> GetOutput<TOutput>(HttpResponseMessage response)
         where TOutput : class
     {
@@ -88,6 +111,8 @@ public class ApiClient
         return output;
     }
 
+
+
     private string PrepareGetRoute(string route, object? queryStringParamObjects)
     {
         if (queryStringParamObjects is null) return route;
@@ -99,4 +124,6 @@ public class ApiClient
 
 
     }
+
+    
 }

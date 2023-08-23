@@ -1,35 +1,81 @@
 ﻿using FC.CodeFlix.Catalog.Api.ApiModels.Video;
-using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Application.UseCases.Video.Common;
 using FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.Enum;
+using FC.CodeFlix.Catalog.Domain.Events;
 using FC.CodeFlix.Catalog.Domain.Extensions;
+using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
+using FC.CodeFlix.Catalog.EndToEndTests.Api.CastMember.Common;
 using FC.CodeFlix.Catalog.EndToEndTests.Api.Genre.Common;
+using FC.CodeFlix.Catalog.Infra.Messaging.JsonPolicies;
+using RabbitMQ.Client;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json;
 using Xunit;
-using FC.CodeFlix.Catalog.EndToEndTests.Api.CastMember.Common;
-using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
+using DomainEntity = FC.CodeFlix.Catalog.Domain.Entity;
 
 namespace FC.CodeFlix.Catalog.EndToEndTests.Api.Video.Common;
 
 [CollectionDefinition(nameof(VideoBaseFixture))]
-public class VideoBaseFixtureCollection: ICollectionFixture<VideoBaseFixture>
+public class VideoBaseFixtureCollection : ICollectionFixture<VideoBaseFixture>
 {
 }
 
-public class VideoBaseFixture: GenreBaseFixture
+public class VideoBaseFixture : GenreBaseFixture
 {
-    public readonly VideoPersistence VideoPersistence;
-    public readonly CastMemberPersistence CastMemberPersistence;
+    public VideoPersistence VideoPersistence { get; private set; }
+    public  CastMemberPersistence CastMemberPersistence { get; private set; }
+
+    private readonly string VideoCreatedQueue = "video.created.queue";
+
+    private readonly string RoutingKey = "video.created";
 
     public VideoBaseFixture() : base()
     {
         VideoPersistence = new VideoPersistence(DbContext);
         CastMemberPersistence = new CastMemberPersistence(DbContext);
+    }
+
+
+    public void SetupRabbitMQ()
+    {
+        var channel = WebAppFactory.RabbitMQChannel!;
+        var exchange = WebAppFactory.RabbitMQConfiguration.Exchange;
+        channel.ExchangeDeclare(exchange, ExchangeType.Direct, true, false);
+        channel.QueueDeclare(VideoCreatedQueue, true, false, false);
+        channel.QueueBind(VideoCreatedQueue, exchange, RoutingKey);
+
+    }
+
+    public void TearDownRabbitQA()
+    {
+        var channel = WebAppFactory.RabbitMQChannel!;
+        var exchange = WebAppFactory.RabbitMQConfiguration.Exchange;
+
+        channel.QueueUnbind(VideoCreatedQueue, exchange, RoutingKey);
+        channel.QueueDelete(VideoCreatedQueue, false, false);
+        channel.ExchangeDelete(exchange, false);
+    }
+
+    public (VideoUploadedEvent?, uint) ReadMessageFromRabbitMQ()
+    {
+        var consumingResult = WebAppFactory.RabbitMQChannel!.BasicGet(VideoCreatedQueue, true);
+
+        var rawMessage = consumingResult.Body.ToArray();
+        var stringMessage = Encoding.UTF8.GetString(rawMessage);
+
+        var jsonOptions = new JsonSerializerOptions()
+        {
+            PropertyNamingPolicy = new JsonSnakeCasePolicy()
+        };
+
+        var @event = JsonSerializer.Deserialize<VideoUploadedEvent>(stringMessage, jsonOptions);
+
+        return (@event!, consumingResult.MessageCount);  
     }
 
     public CreateVideoApiInput GetBasicCreateVideoInput()
@@ -132,7 +178,7 @@ public class VideoBaseFixture: GenreBaseFixture
         video.UpdateMedia(GetValidMediaPath());
         video.UpdateTrailer(GetValidImagePath());
 
-        
+
 
         return video;
     }
@@ -176,7 +222,7 @@ public class VideoBaseFixture: GenreBaseFixture
             .Select(_ => GetExampleCastMember())
             .ToList();
 
-   
+
 
 
 

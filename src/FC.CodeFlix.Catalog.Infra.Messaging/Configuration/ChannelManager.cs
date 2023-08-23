@@ -9,18 +9,16 @@ public class ChannelManager
 
     private readonly object _lock = new();
 
-    public ChannelManager(IConnection connection)
-    {
-        _connection = connection;
-    }
+    public ChannelManager(IConnection connection) => _connection = connection;
 
     public IModel GetChannel()
     {
         lock (_lock)
         {
-            if (_channel is null || _channel.IsClosed)
+            if (_channel is null || _channel.IsClosed) { 
                 _channel = _connection.CreateModel();
-
+                _channel.ConfirmSelect();
+            }
             return _channel;
         }
     }

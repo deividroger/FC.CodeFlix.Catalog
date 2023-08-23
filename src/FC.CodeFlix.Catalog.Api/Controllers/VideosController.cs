@@ -1,6 +1,7 @@
 ﻿using FC.CodeFlix.Catalog.Api.ApiModels.Response;
 using FC.CodeFlix.Catalog.Api.ApiModels.Video;
 using FC.CodeFlix.Catalog.Application.UseCases.Video.Common;
+using FC.CodeFlix.Catalog.Application.UseCases.Video.DeleteVideo;
 using FC.CodeFlix.Catalog.Application.UseCases.Video.GetVideo;
 using FC.CodeFlix.Catalog.Application.UseCases.Video.ListVideos;
 using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
@@ -72,12 +73,40 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<VideoModelOutput>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> UpdateVideo([FromRoute] Guid id, [FromBody] UpdateVideoApiInput apiInput, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateVideo([FromRoute] Guid id, 
+                                                     [FromBody] UpdateVideoApiInput apiInput, CancellationToken cancellationToken)
         {
 
             var output = await _mediator.Send(apiInput.ToInput(id), cancellationToken);
 
             return Ok(new ApiResponse<VideoModelOutput>(output));
         }
+
+        [HttpDelete("{id:guid}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> DeleteById([FromRoute] Guid id, CancellationToken cancellationToken)
+        {
+            await _mediator.Send(new DeleteVideoInput(id), cancellationToken);
+
+            return NoContent();
+        }
+
+        [HttpPost("{id:guid}/medias/{type}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
+        public async Task<ActionResult> UploadMedia(
+            [FromRoute] Guid id, [FromRoute] string type, [FromForm] UploadMediaApiInput apiInput, CancellationToken cancellationToken)
+        {
+            
+            var input = apiInput.ToUploadMediasInput(id, type);
+
+            await _mediator.Send(input, cancellationToken);
+
+            return NoContent();
+        }
+
+
     }
 }

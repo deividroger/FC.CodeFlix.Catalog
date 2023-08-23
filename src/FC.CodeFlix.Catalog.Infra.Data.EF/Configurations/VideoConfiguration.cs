@@ -39,12 +39,14 @@ internal class VideoConfiguration
                  .HasColumnName("BannerPath");
         });
 
-        builder.HasOne(x=>x.Media)
+        builder.HasOne(x => x.Media)
             .WithOne()
+            .OnDelete(DeleteBehavior.NoAction)
             .HasForeignKey<Video>("MediaId");
         
         builder.HasOne(x => x.Trailer)
             .WithOne()
+            .OnDelete(DeleteBehavior.NoAction)
             .HasForeignKey<Video>("TrailerId");
 
         builder.Ignore(builder => builder.Events);

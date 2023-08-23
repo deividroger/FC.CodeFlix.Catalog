@@ -89,21 +89,21 @@ public class CreateVideoTest
 
 
         storageServiceMock.Setup(x => x.Upload(
-            It.Is<string>(x => x.EndsWith("-banner.jpg")),
+            It.Is<string>(x => x.EndsWith("/banner.jpg")),
             It.IsAny<Stream>(),
             It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(expectedBannerName);
 
         storageServiceMock.Setup(x => x.Upload(
-            It.Is<string>(x => x.EndsWith("-thumb.jpg")),
+            It.Is<string>(x => x.EndsWith("/thumb.jpg")),
             It.IsAny<Stream>(),
             It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync(expectedThumbName);
 
         storageServiceMock.Setup(x => x.Upload(
-            It.Is<string>(x => x.EndsWith("-thumbhalf.jpg")),
+            It.Is<string>(x => x.EndsWith("/thumbhalf.jpg")),
             It.IsAny<Stream>(),
             It.IsAny<string>(),
             It.IsAny<CancellationToken>()
@@ -198,21 +198,21 @@ public class CreateVideoTest
         var storageServiceMock = new Mock<IStorageService>();
 
         storageServiceMock.Setup(x => x.Upload(
-            It.Is<string>(x => x.EndsWith("-banner.jpg")),
+            It.Is<string>(x => x.EndsWith("/banner.jpg")),
             It.IsAny<Stream>(),
             It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync("banner.jpg");
 
         storageServiceMock.Setup(x => x.Upload(
-            It.Is<string>(x => x.EndsWith("-thumb.jpg")),
+            It.Is<string>(x => x.EndsWith("/thumb.jpg")),
             It.IsAny<Stream>(),
             It.IsAny<string>(),
             It.IsAny<CancellationToken>()
             )).ReturnsAsync("thumb.jpg");
 
         storageServiceMock.Setup(x => x.Upload(
-            It.Is<string>(x => x.EndsWith("-thumbhalf.jpg")),
+            It.Is<string>(x => x.EndsWith("/thumbhalf.jpg")),
             It.IsAny<Stream>(),
             It.IsAny<string>(),
             It.IsAny<CancellationToken>()

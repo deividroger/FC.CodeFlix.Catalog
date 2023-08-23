@@ -17,7 +17,7 @@ public class StorageFileNameTest
 
         var name = StorageFileName.Create(exampleId, propertyName, exampleExtension);
 
-        name.Should().Be($"{exampleId}-{propertyName.ToLower()}.{exampleExtension}");
+        name.Should().Be($"{exampleId}/{propertyName.ToLower()}.{exampleExtension}");
 
     }
 }

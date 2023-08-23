@@ -1,4 +1,5 @@
-﻿using FC.CodeFlix.Catalog.Infra.Data.EF;
+﻿using FC.CodeFlix.Catalog.Domain.Entity;
+using FC.CodeFlix.Catalog.Infra.Data.EF;
 using FC.CodeFlix.Catalog.Infra.Data.EF.Models;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -31,6 +32,9 @@ public class VideoPersistence
     public async Task<List<VideosCategories>?> GetVideosCategories(Guid id)
         => await _context.VideosCategories.AsNoTracking()
         .Where(videocategory => videocategory.VideoId == id).ToListAsync();
+
+    public async Task<int> GetMediaCount()
+        => await _context.Set<Media>().CountAsync();
 
     public async Task InsertList(List<DomainEntity.Video> videos)
     {
