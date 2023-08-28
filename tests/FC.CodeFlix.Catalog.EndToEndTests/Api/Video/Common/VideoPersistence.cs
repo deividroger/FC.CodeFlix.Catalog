@@ -18,8 +18,10 @@ public class VideoPersistence
         => _context = dbContext;
 
     public async Task<DomainEntity.Video?> GetById(Guid guid)
-        => await _context.Videos.AsNoTracking()
-        .FirstOrDefaultAsync(video=> video.Id == guid);
+        => await _context
+                    .Videos
+        .AsNoTracking()
+        .Where(video=> video.Id == guid).FirstOrDefaultAsync();
 
     public async Task< List<VideosCastMembers>? > GetVideosCastMembers(Guid id)
         => await _context.VideosCastMembers.AsNoTracking()

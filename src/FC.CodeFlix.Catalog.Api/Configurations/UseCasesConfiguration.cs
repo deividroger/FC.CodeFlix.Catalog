@@ -18,11 +18,11 @@ namespace FC.CodeFlix.Catalog.Api.Configurations;
 
 public static class UseCasesConfiguration
 {
-    public static IServiceCollection AddUseCases(this IServiceCollection services,IConfiguration configuration)
+    public static IServiceCollection AddUseCases(this IServiceCollection services)
     {
         services.AddMediatR(typeof(CreateCategory));
         services.AddRepositories();
-        services.AddDomainEvents(configuration);
+        services.AddDomainEvents();
 
         return services;
     }
@@ -42,41 +42,13 @@ public static class UseCasesConfiguration
         return services;
     }
 
-    public static IServiceCollection AddDomainEvents(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddDomainEvents(this IServiceCollection services)
     {
          services.AddTransient<IDomainEventPublisher, DomainEventPublisher>();
 
         services.AddTransient<IDomainEventHandler<VideoUploadedEvent>, SendToEncoderEventHandler>();
 
-
-        services.Configure<RabbitMQConfiguration>(
-            configuration.GetSection(RabbitMQConfiguration.ConfigurationSection));
-
-        services.AddSingleton(sp =>  { 
-            var config = sp.GetRequiredService<IOptions<RabbitMQConfiguration>>().Value;
-                
-            var factory = new ConnectionFactory
-            {
-                HostName = config.HostName,
-                UserName = config.UserName,
-                Password = config.Password,
-                Port = config.Port
-            };
-
-            return factory.CreateConnection();
-        });
-
-        services.AddSingleton<ChannelManager>();
-
-        services.AddTransient<IMessageProducer>(sp =>
-        {
-            var channelManager = sp.GetRequiredService<ChannelManager>();
-            var config = sp.GetRequiredService<IOptions<RabbitMQConfiguration>>();
-
-            return new RabbitMQProducer(channelManager.GetChannel(), config);
-
-        });
-
+        
         return services;
     }
 }

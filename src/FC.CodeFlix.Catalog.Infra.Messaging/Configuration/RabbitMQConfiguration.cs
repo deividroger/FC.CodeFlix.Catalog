@@ -14,4 +14,7 @@ public class RabbitMQConfiguration
 
     public int Port { get; set; }
 
+    public string? VideoEncodedQueue { get; set; }
+
+
 }

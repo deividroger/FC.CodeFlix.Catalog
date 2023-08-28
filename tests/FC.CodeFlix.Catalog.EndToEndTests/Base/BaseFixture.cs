@@ -7,7 +7,7 @@ using System.Net.Http;
 
 namespace FC.CodeFlix.Catalog.EndToEndTests.Base;
 
-public class BaseFixture
+public class BaseFixture: IDisposable
 {
     private readonly string _dbConnectionString;
 
@@ -50,5 +50,10 @@ public class BaseFixture
         var context = CreateDbContext();
         context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
+    }
+
+    public void Dispose()
+    {
+        WebAppFactory.Dispose();
     }
 }

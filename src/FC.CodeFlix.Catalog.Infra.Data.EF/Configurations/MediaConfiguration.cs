@@ -12,8 +12,7 @@ internal class MediaConfiguration
     public void Configure(EntityTypeBuilder<Media> builder)
     {
 
-        builder.HasKey(media => media.Id);
-        builder.Property(media => media.Id)
-                .ValueGeneratedNever();
+        builder.Property(media => media.Id).ValueGeneratedNever();
+
     }
 }

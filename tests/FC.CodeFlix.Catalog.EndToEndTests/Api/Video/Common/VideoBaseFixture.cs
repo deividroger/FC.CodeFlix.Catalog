@@ -7,6 +7,7 @@ using FC.CodeFlix.Catalog.Domain.Extensions;
 using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
 using FC.CodeFlix.Catalog.EndToEndTests.Api.CastMember.Common;
 using FC.CodeFlix.Catalog.EndToEndTests.Api.Genre.Common;
+using FC.CodeFlix.Catalog.Infra.Messaging.Dtos;
 using FC.CodeFlix.Catalog.Infra.Messaging.JsonPolicies;
 using RabbitMQ.Client;
 using System;
@@ -28,11 +29,8 @@ public class VideoBaseFixtureCollection : ICollectionFixture<VideoBaseFixture>
 public class VideoBaseFixture : GenreBaseFixture
 {
     public VideoPersistence VideoPersistence { get; private set; }
-    public  CastMemberPersistence CastMemberPersistence { get; private set; }
+    public CastMemberPersistence CastMemberPersistence { get; private set; }
 
-    private readonly string VideoCreatedQueue = "video.created.queue";
-
-    private readonly string RoutingKey = "video.created";
 
     public VideoBaseFixture() : base()
     {
@@ -41,29 +39,13 @@ public class VideoBaseFixture : GenreBaseFixture
     }
 
 
-    public void SetupRabbitMQ()
+    public (T?, uint) ReadMessageFromRabbitMQ<T>()
+        where T : class
     {
-        var channel = WebAppFactory.RabbitMQChannel!;
-        var exchange = WebAppFactory.RabbitMQConfiguration.Exchange;
-        channel.ExchangeDeclare(exchange, ExchangeType.Direct, true, false);
-        channel.QueueDeclare(VideoCreatedQueue, true, false, false);
-        channel.QueueBind(VideoCreatedQueue, exchange, RoutingKey);
+        var consumingResult = WebAppFactory.RabbitMQChannel!.BasicGet(WebAppFactory.VideoCreatedQueue, true);
 
-    }
-
-    public void TearDownRabbitQA()
-    {
-        var channel = WebAppFactory.RabbitMQChannel!;
-        var exchange = WebAppFactory.RabbitMQConfiguration.Exchange;
-
-        channel.QueueUnbind(VideoCreatedQueue, exchange, RoutingKey);
-        channel.QueueDelete(VideoCreatedQueue, false, false);
-        channel.ExchangeDelete(exchange, false);
-    }
-
-    public (VideoUploadedEvent?, uint) ReadMessageFromRabbitMQ()
-    {
-        var consumingResult = WebAppFactory.RabbitMQChannel!.BasicGet(VideoCreatedQueue, true);
+        if (consumingResult == null)
+            return (null, 0);
 
         var rawMessage = consumingResult.Body.ToArray();
         var stringMessage = Encoding.UTF8.GetString(rawMessage);
@@ -73,9 +55,34 @@ public class VideoBaseFixture : GenreBaseFixture
             PropertyNamingPolicy = new JsonSnakeCasePolicy()
         };
 
-        var @event = JsonSerializer.Deserialize<VideoUploadedEvent>(stringMessage, jsonOptions);
+        var @event = JsonSerializer.Deserialize<T>(stringMessage, jsonOptions);
 
-        return (@event!, consumingResult.MessageCount);  
+        return (@event!, consumingResult.MessageCount);
+    }
+
+    public void PublishMessageToRabbitMQ(object exampleEvent)
+    {
+        var exchange = WebAppFactory.RabbitMQConfiguration.Exchange;
+
+        var jsonOptions = new JsonSerializerOptions()
+        {
+            PropertyNamingPolicy = new JsonSnakeCasePolicy()
+        };
+
+        var message = JsonSerializer.SerializeToUtf8Bytes(exampleEvent, jsonOptions);
+
+        WebAppFactory.RabbitMQChannel.BasicPublish(
+            exchange: exchange, 
+            routingKey: WebAppFactory.VideoEncodedRoutingKey, 
+            body: message);
+    }
+
+
+    public void PurgeRabbitMQQueues()
+    {
+        var channel = WebAppFactory.RabbitMQChannel!;
+        channel.QueuePurge(WebAppFactory.VideoCreatedQueue);
+        channel.QueuePurge(WebAppFactory.RabbitMQConfiguration.VideoEncodedQueue);
     }
 
     public CreateVideoApiInput GetBasicCreateVideoInput()
@@ -173,11 +180,11 @@ public class VideoBaseFixture : GenreBaseFixture
 
         video.UpdateThumb(GetValidImagePath());
         video.UpdateBanner(GetValidImagePath());
-        video.UpdateThumbHalf(GetValidMediaPath());
+        video.UpdateThumbHalf(GetValidImagePath());
 
+        
+        video.UpdateTrailer(GetValidMediaPath());
         video.UpdateMedia(GetValidMediaPath());
-        video.UpdateTrailer(GetValidImagePath());
-
 
 
         return video;
@@ -221,8 +228,6 @@ public class VideoBaseFixture : GenreBaseFixture
         => Enumerable.Range(1, quantity)
             .Select(_ => GetExampleCastMember())
             .ToList();
-
-
 
 
 

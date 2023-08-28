@@ -138,4 +138,11 @@ public class Video : AggregateRoot
 
     public void RemoveAllCastMembers()
         => _castMembers.Clear();
+
+    public void UpdateAsEncodingError()
+    {
+        if (Media is null)
+            throw new EntityValidationException("There is no media");
+        Media!.UpdateAsEncondingError();
+    }
 }

@@ -2,8 +2,6 @@
 using FC.CodeFlix.Catalog.Domain.Entity;
 using FC.CodeFlix.Catalog.Domain.Enum;
 using FluentAssertions;
-using Microsoft.VisualStudio.TestPlatform.Utilities;
-using System.Threading;
 using Xunit;
 
 namespace FC.CodeFlix.Catalog.UnitTests.Domain.Entity.Video;
@@ -51,5 +49,19 @@ public class MediaTest
 
         media.Status.Should().Be(MediaStatus.Completed);
         media.EncodedPath.Should().Be(encodedExamplePath);
+    }
+
+    [Fact(DisplayName = nameof(UpdateAsEncodingError))]
+    [Trait("Domain", "Media Entities")]
+    public void UpdateAsEncodingError()
+    {
+        var media = _fixture.GetValidMedia();
+        
+        media.UpdateAsSentToEncode();
+
+        media.UpdateAsEncondingError();
+
+        media.Status.Should().Be(MediaStatus.Error);
+        media.EncodedPath.Should().BeNull();
     }
 }

@@ -10,9 +10,9 @@ internal class VideoConfiguration
 {
     public void Configure(EntityTypeBuilder<Video> builder)
     {
-        builder.Navigation(x=>x.Media).AutoInclude();
+        builder.Navigation(x => x.Media).AutoInclude();
         builder.Navigation(x => x.Trailer).AutoInclude();
-        
+
         builder.HasKey(video => video.Id);
         builder.Property(video => video.Id)
                 .ValueGeneratedNever();
@@ -39,15 +39,14 @@ internal class VideoConfiguration
                  .HasColumnName("BannerPath");
         });
 
-        builder.HasOne(x => x.Media)
+        builder.HasOne(video => video.Media)
             .WithOne()
-            .OnDelete(DeleteBehavior.NoAction)
             .HasForeignKey<Video>("MediaId");
-        
-        builder.HasOne(x => x.Trailer)
+
+        builder.HasOne(video => video.Trailer)
             .WithOne()
-            .OnDelete(DeleteBehavior.NoAction)
             .HasForeignKey<Video>("TrailerId");
+
 
         builder.Ignore(builder => builder.Events);
     }

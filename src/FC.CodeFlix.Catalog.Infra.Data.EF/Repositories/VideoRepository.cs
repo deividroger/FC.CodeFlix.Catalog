@@ -58,7 +58,7 @@ public class VideoRepository : IVideoRepository
         {
             var oldMediaId = _context.Entry(video).OriginalValues.GetValue<Guid?>($"{nameof(video.Media)}Id");
 
-            if (oldMediaId != null && oldMediaId != video.Trailer?.Id)
+            if (oldMediaId != null && oldMediaId != video.Media?.Id)
             {
                 var oldMedia = _medias.Find(oldMediaId);
                 _medias.Remove(oldMedia!);

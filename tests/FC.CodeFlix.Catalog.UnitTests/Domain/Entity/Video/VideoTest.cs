@@ -346,6 +346,36 @@ public class VideoTest
 
     }
 
+    [Fact(DisplayName = nameof(UpdateAsEncodingError))]
+    [Trait("Domain", "Video - Aggregate")]
+    public void UpdateAsEncodingError()
+    {
+        var validVideo = _fixture.GetValidVideo();
+        var validPath = _fixture.GetValidMediaPath();
+        
+
+        validVideo.UpdateMedia(validPath);
+
+        validVideo.UpdateAsEncodingError();
+
+
+        validVideo.Media!.Status.Should().Be(MediaStatus.Error);
+        validVideo.Media!.EncodedPath.Should().BeNull();
+
+    }
+
+    [Fact(DisplayName = nameof(UpdateAsEncodingErrorThrowsWhenThereIsNoMedia))]
+    [Trait("Domain", "Video - Aggregate")]
+    public void UpdateAsEncodingErrorThrowsWhenThereIsNoMedia()
+    {
+        var validVideo = _fixture.GetValidVideo();
+
+        var action = () => validVideo.UpdateAsEncodingError();
+
+        action.Should().Throw<EntityValidationException>()
+            .WithMessage("There is no media");
+    }
+
     [Fact(DisplayName = nameof(UpdateAsEncodedThrowsWhenThereIsNoMedia))]
     [Trait("Domain", "Video - Aggregate")]
     public void UpdateAsEncodedThrowsWhenThereIsNoMedia()
