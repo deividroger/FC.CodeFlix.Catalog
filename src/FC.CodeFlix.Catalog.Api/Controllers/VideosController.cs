@@ -1,17 +1,20 @@
 ﻿using FC.CodeFlix.Catalog.Api.ApiModels.Response;
 using FC.CodeFlix.Catalog.Api.ApiModels.Video;
+using FC.CodeFlix.Catalog.Api.Authorization;
 using FC.CodeFlix.Catalog.Application.UseCases.Video.Common;
 using FC.CodeFlix.Catalog.Application.UseCases.Video.DeleteVideo;
 using FC.CodeFlix.Catalog.Application.UseCases.Video.GetVideo;
 using FC.CodeFlix.Catalog.Application.UseCases.Video.ListVideos;
 using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FC.CodeFlix.Catalog.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Policy = Policies.VideosManager)]
     public class VideosController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -73,7 +76,7 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
         [ProducesResponseType(typeof(ApiResponse<VideoModelOutput>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status422UnprocessableEntity)]
-        public async Task<IActionResult> UpdateVideo([FromRoute] Guid id, 
+        public async Task<IActionResult> UpdateVideo([FromRoute] Guid id,
                                                      [FromBody] UpdateVideoApiInput apiInput, CancellationToken cancellationToken)
         {
 
@@ -99,7 +102,7 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
         public async Task<ActionResult> UploadMedia(
             [FromRoute] Guid id, [FromRoute] string type, [FromForm] UploadMediaApiInput apiInput, CancellationToken cancellationToken)
         {
-            
+
             var input = apiInput.ToUploadMediasInput(id, type);
 
             await _mediator.Send(input, cancellationToken);

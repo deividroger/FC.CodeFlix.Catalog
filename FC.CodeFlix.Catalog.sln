@@ -28,7 +28,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "env", "env", "{76C00034-824
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.CodeFlix.Catalog.Infra.Storage", "src\FC.CodeFlix.Catalog.Infra.Storage\FC.CodeFlix.Catalog.Infra.Storage.csproj", "{E046A976-50D9-4430-93C9-753C4AF8DAA7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FC.CodeFlix.Catalog.Infra.Messaging", "src\FC.CodeFlix.Catalog.Infra.Messaging\FC.CodeFlix.Catalog.Infra.Messaging.csproj", "{AA90BED0-F2BB-4880-B026-39A19744A88C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FC.CodeFlix.Catalog.Infra.Messaging", "src\FC.CodeFlix.Catalog.Infra.Messaging\FC.CodeFlix.Catalog.Infra.Messaging.csproj", "{AA90BED0-F2BB-4880-B026-39A19744A88C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

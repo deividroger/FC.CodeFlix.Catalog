@@ -1,9 +1,11 @@
 ﻿using FC.CodeFlix.Catalog.Application.UseCases.Video.Common;
 using FC.CodeFlix.Catalog.Infra.Messaging.JsonPolicies;
+using Keycloak.AuthServices.Authentication;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.VisualStudio.TestPlatform.Utilities;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text;
@@ -16,18 +18,48 @@ namespace FC.CodeFlix.Catalog.EndToEndTests.Base;
 public class ApiClient
 {
     private readonly HttpClient _httpClient;
-
+    private readonly KeycloakAuthenticationOptions _keycloakOption;
     private readonly JsonSerializerOptions _defaultSerializeOptions;
 
-    public ApiClient(HttpClient httpClient)
+    private const string _adminUser = "admin";
+    private const string _adminPassword = "123456";
+
+    public ApiClient(HttpClient httpClient, KeycloakAuthenticationOptions keycloakOption)
     {
         _httpClient = httpClient;
+        _keycloakOption = keycloakOption;
+
         _defaultSerializeOptions = new JsonSerializerOptions()
         {
             PropertyNamingPolicy = new JsonSnakeCasePolicy(),
             PropertyNameCaseInsensitive = true
         };
+        AddAuthorizationHeader();
     }
+
+    public async Task<string> GetAccessTokenAsync(string user, string password)
+    {
+        var client = new HttpClient();
+        var request = new HttpRequestMessage(HttpMethod.Post, $"{_keycloakOption.KeycloakUrlRealm}/protocol/openid-connect/token");
+        var collection = new List<KeyValuePair<string, string>>
+        {
+            new("grant_type", "password"),
+            new("client_id", _keycloakOption.Resource),
+            new("client_secret", _keycloakOption.Credentials.Secret),
+            new("username", user),
+            new("password", password)
+        };
+        var content = new FormUrlEncodedContent(collection);
+        request.Content = content;
+        var response = await client.SendAsync(request);
+
+        var credentials = await GetOutput<Credentials>(response);
+
+        return credentials!.AccessToken;
+    }
+
+    public async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request)
+        => await _httpClient.SendAsync(request);
 
     public async Task<(HttpResponseMessage?, TOutput?)> Post<TOutput>(string route, object payload)
         where TOutput : class
@@ -111,6 +143,14 @@ public class ApiClient
         return output;
     }
 
+    private void AddAuthorizationHeader()
+    {
+        var accessToken = GetAccessTokenAsync(_adminUser, _adminPassword)
+            .GetAwaiter().GetResult();
+        _httpClient.DefaultRequestHeaders
+            .Authorization = new AuthenticationHeaderValue(
+                "Bearer", accessToken);
+    }
 
 
     private string PrepareGetRoute(string route, object? queryStringParamObjects)

@@ -1,5 +1,6 @@
 using FC.CodeFlix.Catalog.Api.ApiModels.Category;
 using FC.CodeFlix.Catalog.Api.ApiModels.Response;
+using FC.CodeFlix.Catalog.Api.Authorization;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.Common;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.CreateCategory;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.DeleteCategory;
@@ -8,6 +9,7 @@ using FC.CodeFlix.Catalog.Application.UseCases.Category.ListCategories;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.UpdateCategory;
 using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 
@@ -15,6 +17,7 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = $"{Roles.Categories},{Roles.Admin}")]
     public class CategoriesController : ControllerBase
     {
         private readonly IMediator _mediator;

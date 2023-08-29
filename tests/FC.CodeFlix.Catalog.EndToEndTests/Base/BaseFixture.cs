@@ -1,29 +1,38 @@
 ﻿using Bogus;
 using FC.CodeFlix.Catalog.Infra.Data.EF;
+using Keycloak.AuthServices.Authentication;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Net.Http;
 
 namespace FC.CodeFlix.Catalog.EndToEndTests.Base;
 
-public class BaseFixture: IDisposable
+public class BaseFixture : IDisposable
 {
     private readonly string _dbConnectionString;
 
     public BaseFixture()
     {
         Faker = new("en");
+
         WebAppFactory = new CustomWebApplicationFactory<Program>();
+
+        var configuration = WebAppFactory.Services.GetRequiredService<IConfiguration>();
+
+        var keyCloakOptions = configuration.GetSection(KeycloakAuthenticationOptions.Section)
+                                           .Get<KeycloakAuthenticationOptions>();
+
         HttpClient = WebAppFactory.CreateClient();
-        ApiClient = new ApiClient(HttpClient);
-        var configuration = WebAppFactory.Services.GetService(typeof(IConfiguration));
+        ApiClient = new ApiClient(HttpClient, keyCloakOptions);
+
 
         ArgumentNullException.ThrowIfNull(configuration);
 
-        _dbConnectionString = ((IConfiguration)configuration).GetConnectionString("CatalogDb");
+        _dbConnectionString = configuration.GetConnectionString("CatalogDb");
     }
-        
+
     protected Faker Faker { get; set; }
 
     public CustomWebApplicationFactory<Program> WebAppFactory { get; set; }

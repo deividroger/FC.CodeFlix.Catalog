@@ -279,7 +279,7 @@ public class CategoryTest
     [Trait("Domain", "Category - Aggregates")]
     public void UpdateErrorWhenDescriptionIsGreaterThen10_000Characters()
     {
-        var invalidDescription = _categoryTestFixure.Faker.Lorem.Letter(10_0001);
+        var invalidDescription = _categoryTestFixure.Faker.Lorem.Random.String(10_001);
 
         var validCategory = _categoryTestFixure.GetValidCategory();
 

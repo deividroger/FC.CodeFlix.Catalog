@@ -76,33 +76,37 @@ public class GenreRepository : IGenreRepository
     public async Task<SearchOutput<Genre>> Search(SearchInput input, CancellationToken cancellationToken)
     {
         var toSkip = (input.Page - 1) * input.PerPage;
-
         var query = _genres.AsNoTracking();
 
         query = AddOrderToQuery(query, input.OrderBy, input.Order);
 
-        if (!string.IsNullOrWhiteSpace(input.Search))
-            query = query.Where(x => x.Name.Contains(input.Search));
-
-        var total = await query.CountAsync(cancellationToken);
+        if (!String.IsNullOrWhiteSpace(input.Search))
+            query = query.Where(genre => genre.Name.Contains(input.Search));
 
         var genres = await query
-                                .Skip(toSkip)
-                                .Take(input.PerPage)
-                                .ToListAsync(cancellationToken);
+                .Skip(toSkip).Take(input.PerPage).ToListAsync();
 
-        genres.ForEach(async genre =>
-        {
+        var total = await query.CountAsync();
 
-            (await _genresCategories
-                        .Where(relations => relations.GenreId == genre.Id)
-                        .Select(y => y.CategoryId)
-                        .ToListAsync(cancellationToken))
-                        .ForEach(genre.AddCategory);
+        var genresIds = genres.Select(genre => genre.Id).ToList();
+        var relations = await _genresCategories
+            .Where(relation => genresIds.Contains(relation.GenreId))
+            .ToListAsync();
+        var relationsByGenreIdGroup =
+            relations.GroupBy(x => x.GenreId).ToList();
+        relationsByGenreIdGroup.ForEach(relationGroup => {
+            var genre = genres.Find(genre => genre.Id == relationGroup.Key);
+            if (genre is null) return;
+            relationGroup.ToList()
+                .ForEach(relation => genre.AddCategory(relation.CategoryId));
         });
 
-
-        return new SearchOutput<Genre>(input.Page, input.PerPage, total, genres);
+        return new SearchOutput<Genre>(
+            input.Page,
+            input.PerPage,
+            total,
+            genres
+        );
     }
 
     private IQueryable<Genre> AddOrderToQuery(IQueryable<Genre> query,

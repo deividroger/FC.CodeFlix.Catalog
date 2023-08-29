@@ -1,5 +1,6 @@
 using FC.CodeFlix.Catalog.Api.ApiModels.Genre;
 using FC.CodeFlix.Catalog.Api.ApiModels.Response;
+using FC.CodeFlix.Catalog.Api.Authorization;
 using FC.CodeFlix.Catalog.Application.UseCases.Category.Common;
 using FC.CodeFlix.Catalog.Application.UseCases.Genre.Common;
 using FC.CodeFlix.Catalog.Application.UseCases.Genre.CreateGenre;
@@ -9,12 +10,14 @@ using FC.CodeFlix.Catalog.Application.UseCases.Genre.ListGenres;
 using FC.CodeFlix.Catalog.Application.UseCases.Genre.UpdateGenre;
 using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FC.CodeFlix.Catalog.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [Authorize(Roles = $"{Roles.Genres},{Roles.Admin}")]
     public class GenresController : ControllerBase
     {
         private readonly IMediator _mediator;

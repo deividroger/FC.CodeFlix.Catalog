@@ -1,5 +1,6 @@
 ﻿using FC.CodeFlix.Catalog.Api.ApiModels.CastMember;
 using FC.CodeFlix.Catalog.Api.ApiModels.Response;
+using FC.CodeFlix.Catalog.Api.Authorization;
 using FC.CodeFlix.Catalog.Application.UseCases.CastMember.Common;
 using FC.CodeFlix.Catalog.Application.UseCases.CastMember.CreateCastMember;
 using FC.CodeFlix.Catalog.Application.UseCases.CastMember.DeleteCastMember;
@@ -8,12 +9,15 @@ using FC.CodeFlix.Catalog.Application.UseCases.CastMember.ListCastMembers;
 using FC.CodeFlix.Catalog.Application.UseCases.CastMember.UpdateCastMember;
 using FC.CodeFlix.Catalog.Domain.SeedWork.SearchableRepository;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FC.CodeFlix.Catalog.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
+
+[Authorize(Roles = $"{Roles.CastMembers},{Roles.Admin}")]
 public class CastMembersController : ControllerBase
 {
 

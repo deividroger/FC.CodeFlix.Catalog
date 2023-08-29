@@ -9,7 +9,8 @@ builder.Services
         .AddMessageProducer()
         .AddMessageConsumer()
         .AddStorage(builder.Configuration)
-        .AddAndConfigureControllers() ;
+        .AddSecurity(builder.Configuration)
+        .AddAndConfigureControllers();
 
 
 var app = builder.Build();
@@ -18,12 +19,14 @@ app.UseDocumentation();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
 
 app.Run();
 
-public partial class Program { 
+public partial class Program
+{
 
 };

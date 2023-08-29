@@ -19,3 +19,28 @@ services:
         ports:
             - 25672:15672
             - 56720:5672
+        volumes:
+            - .docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    keycloack:
+        container_name: ad_videos_keycloack_e2e
+        image: quay.io/keycloak/keycloak:20.0.3
+        hostname: keycloack
+        environment:
+            - KEYCLOAK_ADMIN=admin
+            - KEYCLOAK_ADMIN_PASSWORD=admin
+            - KEY_CLOAK_USER=codeflix   
+            - KC_DB=mysql
+            - KC_DB_URL_HOST=catalogdb-e2e
+            - KC_DB_URL_PORT=3306
+            - KC_DB_SCHEMA=keycloak
+            - KC_DB_USERNAME=root
+            - KC_DB_PASSWORD=C0D3fl1x.0
+        volumes:
+            - .docker/keycloak:/opt/keycloak/data/import
+        ports:
+            - 8444:8080
+        restart: unless-stopped
+        depends_on: 
+          - fc.codeflix.catalog.db
+        command:
+            - start-dev --import-realm
