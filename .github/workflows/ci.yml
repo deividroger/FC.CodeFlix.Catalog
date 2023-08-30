@@ -34,7 +34,6 @@ jobs:
     - name: Waits keycloak
       uses: iFaxity/wait-on-action@v1.1.0
       with:
-       resource: http://localhost:4444/realms/fc3-codeflix/.well-known/openid-configuration
-    
+       resource: http://localhost:8444/realms/fc3-codeflix/.well-known/openid-configuration
     - name: Test
       run: dotnet test --no-build --verbosity normal
