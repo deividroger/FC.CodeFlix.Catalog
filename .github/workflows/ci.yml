@@ -85,7 +85,7 @@ jobs:
            
 
         - name: Build and push Docker images
-          uses: docker/build-push-action@4.1.1
+          uses: docker/build-push-actionv4.1.1
           with:
             context: .
             file: .src/FC.CodeFlix.Catalog.Api/Dockerfile
