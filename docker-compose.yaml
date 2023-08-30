@@ -1,5 +1,13 @@
 version: '3.4'
 services:
+    app:
+        container_name: adm_video_app
+        image: deividroger/fc-codeflix-catalog:latest
+        ports:
+            - 5000:80
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+            - ASPNETCORE_URLS=http://+:80
     fc.codeflix.catalog.db:
       hostname: catalogdb
       container_name: catalogdb
