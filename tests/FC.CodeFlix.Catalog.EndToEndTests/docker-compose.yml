@@ -8,7 +8,8 @@ services:
         - 33060:3306
       environment:
         MYSQL_ROOT_PASSWORD: C0D3fl1x.0
-
+      volumes:
+        - .docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
     rabbitmq:
         container_name: adm_video_rabbitmq_e2e
         image: rabbitmq:3-management
@@ -19,8 +20,8 @@ services:
         ports:
             - 25672:15672
             - 56720:5672
-        volumes:
-            - .docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+        
+
     keycloack:
         container_name: ad_videos_keycloack_e2e
         image: quay.io/keycloak/keycloak:20.0.3
