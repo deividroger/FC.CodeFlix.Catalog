@@ -90,4 +90,4 @@ jobs:
             context: .
             file: .src/FC.CodeFlix.Catalog.Api/Dockerfile
             push: true
-            tags: ${{ secrets.DOCKER_HUB_USER }}/${{ env.IMAGE_NAME }}:${{ env.BUILD_TAG }},${{ secrets.DOCKER_HUB_USER }}/${{ env.IMAGE_NAME }}:latest
+            tags: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ env.BUILD_TAG }},${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest
