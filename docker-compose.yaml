@@ -8,6 +8,15 @@ services:
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - ASPNETCORE_URLS=http://+:80
+        depends_on:
+            - fc.codeflix.catalog.db
+            - rabbitmq
+            - keycloack
+        networks:
+            - service_catalog
+        restart: 
+            unless-stopped
+    
     fc.codeflix.catalog.db:
       hostname: catalogdb
       container_name: catalogdb
@@ -58,7 +67,8 @@ services:
             - fc.codeflix.catalog.db
         networks:
             - service_catalog
-    
+        restart: 
+            unless-stopped    
 networks:
   service_catalog:
     name: service_catalog
