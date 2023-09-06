@@ -15,6 +15,8 @@ builder.Services
 
 var app = builder.Build();
 
+app.MigrateDatabase();
+
 app.UseDocumentation();
 
 

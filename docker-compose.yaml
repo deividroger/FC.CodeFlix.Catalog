@@ -28,7 +28,7 @@ services:
       networks:
         - service_catalog
       volumes:
-         - ./container-volume/mysql-data:/var/lib/mysql
+        - .docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
 
     rabbitmq:
         container_name: adm_video_rabbitmq
@@ -43,7 +43,8 @@ services:
         networks:
             - service_catalog
         volumes:
-            - ./container-volume/rabbitmq-data:/var/lib/rabbitmq/mnesia
+            - .docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+            - .docker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
     
     keycloack:
         container_name: ad_videos_keycloack
@@ -59,10 +60,12 @@ services:
             - KC_DB_SCHEMA=keycloak
             - KC_DB_USERNAME=root
             - KC_DB_PASSWORD=C0D3fl1x.0
+        volumes:
+            - .docker/keycloak:/opt/keycloak/data/import
         ports:
             - 8443:8080
         command:
-            - start-dev
+            - start-dev --import-realm
         depends_on:
             - fc.codeflix.catalog.db
         networks:
