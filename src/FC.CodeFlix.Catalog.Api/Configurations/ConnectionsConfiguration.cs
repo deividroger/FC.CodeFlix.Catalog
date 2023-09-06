@@ -27,7 +27,7 @@ public static class ConnectionsConfiguration
     {
         var environment = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
 
-        if(environment == Environments.Development)
+        if(environment == "EndToEndTest")
             return app;
 
         using var scope = app.Services.CreateScope();
