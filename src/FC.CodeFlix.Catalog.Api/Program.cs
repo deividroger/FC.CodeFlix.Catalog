@@ -15,9 +15,15 @@ builder.Services
 
 var app = builder.Build();
 
+app.MigrateDatabase();
+
 app.UseDocumentation();
 
-app.UseHttpsRedirection();
+
+if (app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();

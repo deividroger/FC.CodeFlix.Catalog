@@ -104,7 +104,7 @@ public class UpdateMediaStatusTest
         var exampleVideo = _fixture.GetValidVideoWithAllProperties();
         var input = _fixture.GetInvalidStatusEncondingInput(exampleVideo.Id);
 
-        var expectedEncondedPath = exampleVideo.Media!.EncodedPath;
+        var expectedEncodedPath = exampleVideo.Media!.EncodedPath;
         var expetedStatus = exampleVideo.Media.Status;
         var expectedErrorMessage = "Invalid media status";
 
@@ -118,7 +118,7 @@ public class UpdateMediaStatusTest
 
 
         exampleVideo.Media!.Status.Should().Be(expetedStatus);
-        exampleVideo.Media!.EncodedPath.Should().Be(expectedEncondedPath);
+        exampleVideo.Media!.EncodedPath.Should().Be(expectedEncodedPath);
 
 
         _videoRepository.VerifyAll();

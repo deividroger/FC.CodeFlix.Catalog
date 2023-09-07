@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 container-volume
+gcp_credentials.json

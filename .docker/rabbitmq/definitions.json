@@ -1,0 +1,72 @@
+{
+    "queues": [
+        {
+            "name": "video.encoded.queue",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {}
+        },
+        {
+            "name": "video.created.queue",
+            "vhost": "/",
+            "durable": true,
+            "auto_delete": false,
+            "arguments": {}
+        }
+    ],
+    "exchanges": [
+        {
+            "name": "video.events",
+            "vhost": "/",
+            "type": "direct",
+            "durable": true,
+            "auto_delete": false,
+            "internal": false,
+            "arguments": {}
+        }
+    ],
+    "bindings": [
+        {
+            "source": "video.events",
+            "vhost": "/",
+            "destination": "video.created.queue",
+            "destination_type": "queue",
+            "routing_key": "video.created",
+            "arguments": {}
+        },
+        {
+            "source": "video.events",
+            "vhost": "/",
+            "destination": "video.encoded.queue",
+            "destination_type": "queue",
+            "routing_key": "video.encoded",
+            "arguments": {}
+        }
+    ],
+    "users": [
+        {
+            "name": "codeflix",
+            "password_hash": "zOD7vENMkDKCoMBX5uNIOljEpwOX+fbotNieTVTF9xMNqFoP",
+            "hashing_algorithm": "rabbit_password_hashing_sha256",
+            "tags": [
+                "administrator"
+            ],
+            "limits": {}
+        }
+    ],
+    "vhosts": [
+        {
+            "name": "/"
+        }
+    ],
+    "permissions": [
+        {
+            "user": "codeflix",
+            "vhost": "/",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+        }
+    ]
+}
