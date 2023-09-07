@@ -8,6 +8,9 @@ services:
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
             - ASPNETCORE_URLS=http://+:80
+            - GOOGLE_APPLICATION_CREDENTIALS=/app/gcp_credentials.json
+        volumes:
+            - ./src/FC.CodeFlix.Catalog.Api/gcp_credentials.json:/app/gcp_credentials.json
         depends_on:
             - fc.codeflix.catalog.db
             - rabbitmq
@@ -16,7 +19,7 @@ services:
             - service_catalog
         restart: 
             unless-stopped
-    
+
     fc.codeflix.catalog.db:
       hostname: catalogdb
       container_name: catalogdb
