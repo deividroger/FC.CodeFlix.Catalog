@@ -363,4 +363,11 @@ MigrationBackup/
 FodyWeavers.xsd
 
 container-volume
+
+# docker volumes
+elastic/.docker/es*
+.docker/filebeat/registry/*
+filebeat.lock
+.docker/filebeat/meta.json
 gcp_credentials.json
+

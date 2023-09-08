@@ -14,11 +14,15 @@ services:
         depends_on:
             - fc.codeflix.catalog.db
             - rabbitmq
-            - keycloack
+            - Keycloak
+            - filebeat
         networks:
             - service_catalog
         restart: 
             unless-stopped
+        labels:
+            filebeat_collector: true
+            decode_log_event_to_json_object: true
 
     fc.codeflix.catalog.db:
       hostname: catalogdb
@@ -49,10 +53,10 @@ services:
             - .docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
             - .docker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
     
-    keycloack:
+    Keycloak:
         container_name: ad_videos_keycloack
         image: quay.io/keycloak/keycloak:20.0.3
-        hostname: keycloack
+        hostname: Keycloak
         environment:
             - KEYCLOAK_ADMIN=admin
             - KEYCLOAK_ADMIN_PASSWORD=admin
@@ -74,7 +78,21 @@ services:
         networks:
             - service_catalog
         restart: 
-            unless-stopped    
+            unless-stopped
+
+    filebeat:
+        container_name: adm_videos_filebeat
+        image: docker.elastic.co/beats/filebeat:7.17.10
+        command: filebeat -e -strict.perms=false
+        volumes:
+        - /var/lib/docker/containers:/var/lib/docker/containers:ro           # Docker logs
+        - /var/run/docker.sock:/var/run/docker.sock:ro                       # Additional information about containers
+        - .docker/filebeat/filebeat.docker.yml:/usr/share/filebeat/filebeat.yml:ro # Configuration file
+        - .docker/filebeat:/usr/share/filebeat/data:rw                    # Persistence data
+        user: root                                                             # Allow access to log files and docker.sock
+        restart: on-failure
+        networks:
+            - service_catalog
 networks:
   service_catalog:
     name: service_catalog
