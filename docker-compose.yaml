@@ -14,7 +14,7 @@ services:
         depends_on:
             - fc.codeflix.catalog.db
             - rabbitmq
-            - keycloack
+            - Keycloak
             - filebeat
         networks:
             - service_catalog
@@ -53,10 +53,10 @@ services:
             - .docker/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
             - .docker/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json
     
-    keycloack:
+    Keycloak:
         container_name: ad_videos_keycloack
         image: quay.io/keycloak/keycloak:20.0.3
-        hostname: keycloack
+        hostname: Keycloak
         environment:
             - KEYCLOAK_ADMIN=admin
             - KEYCLOAK_ADMIN_PASSWORD=admin
