@@ -370,3 +370,4 @@ elastic/.docker/es*
 filebeat.lock
 .docker/filebeat/meta.json
 gcp_credentials.json
+

@@ -15,10 +15,14 @@ builder.Services
 
 var app = builder.Build();
 
+
 app.UseHttpLogging();
+
+
 app.MigrateDatabase();
 
 app.UseDocumentation();
+
 
 //app.UseHttpsRedirection();
 
