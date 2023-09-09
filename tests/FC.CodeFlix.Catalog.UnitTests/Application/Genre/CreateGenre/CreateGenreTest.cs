@@ -72,7 +72,7 @@ public class CreateGenreTest
         categoryRepositoryMock.Setup(
                                     x => x.GetIdsListByIds(It.IsAny<List<Guid>>(),
                                     It.IsAny<CancellationToken>())
-                               ).ReturnsAsync(input.CategoriesIds!);
+                               ).ReturnsAsync(input.CategoriesId!);
 
 
         var useCases = new UseCases.CreateGenre(genreRepositoryMock.Object, unitOfWorkMock.Object, categoryRepositoryMock.Object);
@@ -93,9 +93,9 @@ public class CreateGenreTest
         output.Name.Should().Be(input.Name);
         output.IsActive.Should().Be(input.IsActive);
         output.Id.Should().NotBeEmpty();
-        output.Categories.Should().HaveCount(input.CategoriesIds?.Count ?? 0);
+        output.Categories.Should().HaveCount(input.CategoriesId?.Count ?? 0);
 
-        input.CategoriesIds?.ForEach(id => output.Categories.Should().Contain(relation => relation.Id == id));
+        input.CategoriesId?.ForEach(id => output.Categories.Should().Contain(relation => relation.Id == id));
 
         output.CreatedAt.Should().NotBeSameDateAs(default(DateTime));
     }
@@ -114,12 +114,12 @@ public class CreateGenreTest
 
         var input = _fixture.GetExampleInputWithCategories();
 
-        var exampleGuid = input.CategoriesIds![^1];
+        var exampleGuid = input.CategoriesId![^1];
 
         categoryRepositoryMock.Setup(
                                     x => x.GetIdsListByIds(It.IsAny<List<Guid>>(),
                                     It.IsAny<CancellationToken>())
-                               ).ReturnsAsync(input.CategoriesIds.FindAll(x => x != exampleGuid));
+                               ).ReturnsAsync(input.CategoriesId.FindAll(x => x != exampleGuid));
 
         var useCases = new UseCases.CreateGenre(genreRepositoryMock.Object,
                                                 unitOfWorkMock.Object,

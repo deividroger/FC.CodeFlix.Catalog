@@ -28,7 +28,7 @@ public class DeleteCastMemberApiTest : IDisposable
 
         var (response, _) = await _fixture
                             .ApiClient
-                            .Delete<object>($"castMembers/{example.Id}");
+                            .Delete<object>($"cast_members/{example.Id}");
 
         response.Should().NotBeNull();
         response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status204NoContent);
@@ -45,7 +45,7 @@ public class DeleteCastMemberApiTest : IDisposable
 
         var (response, output) = await _fixture
                             .ApiClient
-                            .Delete<ProblemDetails>($"castMembers/{randomGuid}");
+                            .Delete<ProblemDetails>($"cast_members/{randomGuid}");
 
         response.Should().NotBeNull();
         response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status404NotFound);

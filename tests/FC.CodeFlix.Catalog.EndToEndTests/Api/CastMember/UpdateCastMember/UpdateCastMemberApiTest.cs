@@ -33,7 +33,7 @@ public class UpdateCastMemberApiTest: IDisposable
 
         var (response, output) = await _fixture
                             .ApiClient
-                            .Put<ApiResponse<CastMemberModelOutput>>($"castMembers/{example.Id}",
+                            .Put<ApiResponse<CastMemberModelOutput>>($"cast_members/{example.Id}",
                                 new UpdateCastMemberApiInput(newName,newType));
 
         response.Should().NotBeNull();
@@ -66,7 +66,7 @@ public class UpdateCastMemberApiTest: IDisposable
 
         var (response, output) = await _fixture
                             .ApiClient
-                            .Put<ProblemDetails>($"castMembers/{randomGuid}",
+                            .Put<ProblemDetails>($"cast_members/{randomGuid}",
                                 new UpdateCastMemberApiInput(newName, newType));
 
         response.Should().NotBeNull();
@@ -91,7 +91,7 @@ public class UpdateCastMemberApiTest: IDisposable
 
         var (response, output) = await _fixture
                             .ApiClient
-                            .Put<ProblemDetails>($"castMembers/{example.Id}",
+                            .Put<ProblemDetails>($"cast_members/{example.Id}",
                                 new UpdateCastMemberApiInput(newName, newType));
 
         response.Should().NotBeNull();
