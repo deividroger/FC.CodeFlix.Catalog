@@ -17,6 +17,10 @@ public static class ControllersConfiguration
                 = new JsonSnakeCasePolicy();
         });
 
+        services.Configure<RouteOptions>(options => { 
+            options.LowercaseUrls = true;
+        });
+
         services.AddDocumentation();
 
         return services;

@@ -148,33 +148,33 @@ public class CreateVideo : ICreateVideo
 
     private async Task ValidateAndAddRelations(CreateVideoInput input, DomainEntity.Video video, CancellationToken cancellationToken)
     {
-        if ((input.CategoriesIds?.Count ?? 0) > 0)
+        if ((input.CategoriesId?.Count ?? 0) > 0)
         {
             await ValidateCategoriesIds(input, cancellationToken);
-            input.CategoriesIds!.ToList().ForEach(id => video.AddCategory(id));
+            input.CategoriesId!.ToList().ForEach(id => video.AddCategory(id));
         }
 
-        if ((input.GenresIds?.Count ?? 0) > 0)
+        if ((input.GenresId?.Count ?? 0) > 0)
         {
             await ValidateGenresIds(input, cancellationToken);
-            input.GenresIds!.ToList().ForEach(video.AddGenre);
+            input.GenresId!.ToList().ForEach(video.AddGenre);
         }
 
-        if ((input.CastMembersIds?.Count ?? 0) > 0)
+        if ((input.CastMembersId?.Count ?? 0) > 0)
         {
             await ValidateCastMembersIds(input, cancellationToken);
-            input.CastMembersIds!.ToList().ForEach(video.AddCastMember);
+            input.CastMembersId!.ToList().ForEach(video.AddCastMember);
         }
     }
 
     private async Task ValidateCastMembersIds(CreateVideoInput input, CancellationToken cancellationToken)
     {
         var persistenceIds = await _castMemberRepository
-            .GetIdsListByIds(input.CastMembersIds!.ToList(), cancellationToken); ;
+            .GetIdsListByIds(input.CastMembersId!.ToList(), cancellationToken); ;
 
-        if (persistenceIds.Count < input.CastMembersIds!.Count)
+        if (persistenceIds.Count < input.CastMembersId!.Count)
         {
-            var notFoundIds = input.CastMembersIds!.ToList()
+            var notFoundIds = input.CastMembersId!.ToList()
                 .FindAll(castMemberId => !persistenceIds.Contains(castMemberId));
 
             throw new RelatedAggregateException(
@@ -185,12 +185,12 @@ public class CreateVideo : ICreateVideo
     private async Task ValidateGenresIds(CreateVideoInput input, CancellationToken cancellationToken)
     {
         var persistenceIds = await _genreRepository
-            .GetIdsListByIds(input.GenresIds!.ToList(), cancellationToken);
+            .GetIdsListByIds(input.GenresId!.ToList(), cancellationToken);
 
-        if (persistenceIds.Count < input.GenresIds!.Count)
+        if (persistenceIds.Count < input.GenresId!.Count)
         {
 
-            var notFoundIds = input.GenresIds!.ToList()
+            var notFoundIds = input.GenresId!.ToList()
                 .FindAll(genreId => !persistenceIds.Contains(genreId));
 
             throw new RelatedAggregateException(
@@ -201,12 +201,12 @@ public class CreateVideo : ICreateVideo
     private async Task ValidateCategoriesIds(CreateVideoInput input, CancellationToken cancellationToken)
     {
         var persistenceIds = await _categoryRepository
-            .GetIdsListByIds(input.CategoriesIds!.ToList(), cancellationToken);
+            .GetIdsListByIds(input.CategoriesId!.ToList(), cancellationToken);
 
-        if (persistenceIds.Count < input.CategoriesIds!.Count)
+        if (persistenceIds.Count < input.CategoriesId!.Count)
         {
 
-            var notFoundIds = input.CategoriesIds!.ToList()
+            var notFoundIds = input.CategoriesId!.ToList()
                 .FindAll(categoryId => !persistenceIds.Contains(categoryId));
 
             throw new RelatedAggregateException(

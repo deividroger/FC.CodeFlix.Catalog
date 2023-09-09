@@ -27,14 +27,17 @@ namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Genre.GetGen
 
             var expectedGenre = genresExamplesList[5];
             var dbContext = _fixture.CreateDbContext();
+            
             await dbContext.AddRangeAsync(genresExamplesList);
             dbContext.SaveChanges();
 
-            var repository = new GenreRepository(_fixture.CreateDbContext(true));
+            var dbActContext = _fixture.CreateDbContext(true);  
+            var categoryRepository = new CategoryRepository(dbActContext);
+            var repository = new GenreRepository(dbActContext);
 
             var input = new UseCase.GetGenreInput(expectedGenre.Id);
 
-            var useCase = new UseCase.GetGenre(repository);
+            var useCase = new UseCase.GetGenre(repository, categoryRepository);
 
             var output = await useCase.Handle(input, CancellationToken.None);
 
@@ -58,11 +61,14 @@ namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Genre.GetGen
             await dbContext.AddRangeAsync(genresExamplesList);
             dbContext.SaveChanges();
 
-            var repository = new GenreRepository(_fixture.CreateDbContext(true));
+            var dbActContext = _fixture.CreateDbContext(true);
+            var categoryRepository = new CategoryRepository(dbActContext);
+            var repository = new GenreRepository(dbActContext);
+            var useCase = new UseCase.GetGenre(repository, categoryRepository);
 
             var input = new UseCase.GetGenreInput(randomGuid);
 
-            var useCase = new UseCase.GetGenre(repository);
+            
 
             var output = async () => await useCase.Handle(input, CancellationToken.None);
 
@@ -91,11 +97,13 @@ namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Genre.GetGen
 
             dbContext.SaveChanges();
 
-            var repository = new GenreRepository(_fixture.CreateDbContext(true));
+            var dbActContext = _fixture.CreateDbContext(true);
+            var categoryRepository = new CategoryRepository(dbActContext);
+            var repository = new GenreRepository(dbActContext);
+            var useCase = new UseCase.GetGenre(repository, categoryRepository);
 
             var input = new UseCase.GetGenreInput(expectedGenre.Id);
 
-            var useCase = new UseCase.GetGenre(repository);
 
             var output = await useCase.Handle(input, CancellationToken.None);
 
@@ -111,8 +119,11 @@ namespace FC.CodeFlix.Catalog.IntegrationTests.Application.UseCases.Genre.GetGen
 
             output.Categories.ToList().ForEach(relationModel =>
             {
-                expectedGenre.Categories.Should().Contain(relationModel.Id) ;
-                relationModel.Name.Should().BeNull();
+                expectedGenre.Categories.Should().Contain(relationModel.Id);
+
+                var relatedCategory = categoriesExampleList.Find(category => category.Id == relationModel.Id);
+
+                relationModel.Name.Should().Be(relatedCategory!.Name);
 
             });
 
