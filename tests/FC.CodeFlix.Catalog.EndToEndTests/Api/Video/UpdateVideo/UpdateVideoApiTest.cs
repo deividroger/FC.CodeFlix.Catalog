@@ -133,9 +133,9 @@ public class UpdateVideoApiTest : IDisposable
             Opened = _fixture.GetRandomBoolean(),
             Published = _fixture.GetRandomBoolean(),
             Rating = _fixture.GetRandomRating().ToStringSignal(),
-            CategoriesIds = targetCategories.Select(category => category.Id).ToList(),
-            GenresIds = targetGenres.Select(genre => genre.Id).ToList(),
-            CastMembersIds = targetCastMembers.Select(castMember => castMember.Id).ToList(),
+            CategoriesId = targetCategories.Select(category => category.Id).ToList(),
+            GenresId = targetGenres.Select(genre => genre.Id).ToList(),
+            CastMembersId = targetCastMembers.Select(castMember => castMember.Id).ToList(),
         };
 
         var (response, output) = await _fixture.ApiClient
@@ -183,15 +183,15 @@ public class UpdateVideoApiTest : IDisposable
 
         var categoriesIdsFromDb = videoCategoriesFromDb!.Select(x => x.CategoryId).ToList();
         
-        updateVideoApiInput.CategoriesIds.Should().BeEquivalentTo(categoriesIdsFromDb);
+        updateVideoApiInput.CategoriesId.Should().BeEquivalentTo(categoriesIdsFromDb);
 
         var videoGenresFromDb = await _fixture.VideoPersistence.GetVideosGenres(targetVideoId);
         var genresIdsFromDb = videoGenresFromDb!.Select(x => x.GenreId).ToList();
-        updateVideoApiInput.GenresIds.Should().BeEquivalentTo(genresIdsFromDb);
+        updateVideoApiInput.GenresId.Should().BeEquivalentTo(genresIdsFromDb);
 
         var videoCastMembersFromDb = await _fixture.VideoPersistence.GetVideosCastMembers(targetVideoId);
         var castMembersIdsFromDb = videoCastMembersFromDb!.Select(x => x.CastMemberId).ToList();
-        updateVideoApiInput.CastMembersIds.Should().BeEquivalentTo(castMembersIdsFromDb);
+        updateVideoApiInput.CastMembersId.Should().BeEquivalentTo(castMembersIdsFromDb);
 
     }
 
@@ -249,7 +249,7 @@ public class UpdateVideoApiTest : IDisposable
             Opened = _fixture.GetRandomBoolean(),
             Published = _fixture.GetRandomBoolean(),
             Rating = _fixture.GetRandomRating().ToStringSignal(),
-            CategoriesIds = new List<Guid>() { categoryId }
+            CategoriesId = new List<Guid>() { categoryId }
         };
 
 

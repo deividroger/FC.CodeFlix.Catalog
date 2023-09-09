@@ -10,7 +10,14 @@ builder.Services
         .AddMessageConsumer()
         .AddStorage(builder.Configuration)
         .AddSecurity(builder.Configuration)
-        .AddAndConfigureControllers();
+        .AddAndConfigureControllers()
+        .AddCors(p=> p.AddPolicy("CORS", builder=> {
+            builder
+            .WithOrigins("*")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
+        
+        }));
 
 
 var app = builder.Build();
@@ -25,6 +32,8 @@ app.UseDocumentation();
 
 
 //app.UseHttpsRedirection();
+
+app.UseCors("CORS");
 
 app.UseAuthentication();
 app.UseAuthorization();

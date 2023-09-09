@@ -15,7 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FC.CodeFlix.Catalog.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("cast_members")]
 
 [Authorize(Roles = $"{Roles.CastMembers},{Roles.Admin}")]
 public class CastMembersController : ControllerBase

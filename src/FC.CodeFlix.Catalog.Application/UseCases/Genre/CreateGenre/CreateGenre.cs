@@ -19,11 +19,11 @@ public class CreateGenre : ICreateGenre
         var genre = new DomainEntity.Genre(request.Name, request.IsActive);
 
 
-        if ((request.CategoriesIds?.Count ?? 0) > 0)
+        if ((request.CategoriesId?.Count ?? 0) > 0)
         {
             await ValidatedRequestId(request, cancellationToken);
 
-            request.CategoriesIds!.ForEach(genre.AddCategory);
+            request.CategoriesId!.ForEach(genre.AddCategory);
         }
 
         await _genreRepository.Insert(genre, cancellationToken);
@@ -37,11 +37,11 @@ public class CreateGenre : ICreateGenre
 
     private async Task ValidatedRequestId(CreateGenreInput request, CancellationToken cancellationToken)
     {
-        var idsInPersistence = await _categoryRepository.GetIdsListByIds(request.CategoriesIds!, cancellationToken);
+        var idsInPersistence = await _categoryRepository.GetIdsListByIds(request.CategoriesId!, cancellationToken);
 
-        if (idsInPersistence.Count < request.CategoriesIds!.Count)
+        if (idsInPersistence.Count < request.CategoriesId!.Count)
         {
-            var notFoundId = request.CategoriesIds
+            var notFoundId = request.CategoriesId
                                     .FindAll(x => !idsInPersistence.Contains(x));
             var notFoundIdsAsString = string.Join(", ", notFoundId);
 

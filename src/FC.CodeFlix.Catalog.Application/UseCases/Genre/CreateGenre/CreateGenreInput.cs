@@ -5,11 +5,6 @@ namespace FC.CodeFlix.Catalog.Application.UseCases.Genre.CreateGenre;
 
 public class CreateGenreInput : IRequest<GenreModelOutput>
 {
-    public CreateGenreInput()
-    {
-
-    }
-
     public CreateGenreInput(string name, 
                             bool isActive,
                             List<Guid>? categoriesId = null)
@@ -17,12 +12,12 @@ public class CreateGenreInput : IRequest<GenreModelOutput>
         Name = name;
         IsActive = isActive;
 
-        CategoriesIds = categoriesId;
+        CategoriesId = categoriesId;
     }
 
     public string Name { get; set; }
 
     public bool IsActive { get; set; }
 
-    public List<Guid>? CategoriesIds { get; set; }
+    public List<Guid>? CategoriesId { get; set; }
 }

@@ -28,7 +28,7 @@ public class CreateCastMemberApiTest: IDisposable
 
         var (response, output) = await _fixture
                                            .ApiClient
-                                           .Post<TestApiResponse<CastMemberModelOutput>>("castMembers",
+                                           .Post<TestApiResponse<CastMemberModelOutput>>("cast_members",
                                                 new CreateCastMemberInput(example.Name, example.Type));
         response.Should().NotBeNull();
         response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status201Created);

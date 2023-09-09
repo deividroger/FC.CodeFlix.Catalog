@@ -13,9 +13,9 @@ public record UpdateVideoInput(
         bool Opened,
         int Duration,
         Rating Rating,
-        List<Guid>? GenresIds = null,
-        List<Guid>? CategoriesIds = null,
-        List<Guid>? CastMembersIds = null,
+        List<Guid>? GenresId = null,
+        List<Guid>? CategoriesId = null,
+        List<Guid>? CastMembersId = null,
         FileInput? Banner = null,
         FileInput? Thumb = null,
         FileInput? ThumbHalf = null

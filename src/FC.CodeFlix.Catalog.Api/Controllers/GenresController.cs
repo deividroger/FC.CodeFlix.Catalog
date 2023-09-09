@@ -75,7 +75,7 @@ namespace FC.CodeFlix.Catalog.Api.Controllers
                                              new UpdateGenreInput(id, 
                                                                   apiInput.Name,
                                                                   apiInput.IsActive,
-                                                                  apiInput.CategoriesIds),
+                                                                  apiInput.CategoriesId),
                                              cancellationToken);
 
             return Ok(new ApiResponse<GenreModelOutput>(output));
