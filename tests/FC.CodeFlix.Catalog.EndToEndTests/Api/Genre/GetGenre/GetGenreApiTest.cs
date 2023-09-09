@@ -1,5 +1,6 @@
 ﻿using FC.CodeFlix.Catalog.Api.ApiModels.Response;
 using FC.CodeFlix.Catalog.Application.UseCases.Genre.Common;
+using FC.CodeFlix.Catalog.Domain.Validation;
 using FC.CodeFlix.Catalog.Infra.Data.EF.Models;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
@@ -116,9 +117,12 @@ public class GetGenreApiTest: IDisposable
         output!.Data.Name.Should().Be(targetGenre.Name);
         output!.Data.IsActive.Should().Be(targetGenre.IsActive);
 
-        var relatedCategoriesIds = output.Data.Categories.Select(relation => relation.Id).ToList();
+        foreach (var category in output.Data.Categories)
+        {
+            var expectedCategory = exampleCategories.Find(x => x.Id == category.Id);
+            category.Name.Should().Be(expectedCategory!.Name);
 
-        relatedCategoriesIds.Should().BeEquivalentTo(targetGenre.Categories);
+        }
 
     }
 

@@ -32,7 +32,7 @@ public class ListCastMembersApiTest : IDisposable
         await _fixture.Persistence.InsertList(examples);
 
         var (response, output) = await _fixture.ApiClient
-                                               .Get<TestApiResponseList<CastMemberModelOutput>>("castMembers");
+                                               .Get<TestApiResponseList<CastMemberModelOutput>>("cast_members");
 
         response.Should().NotBeNull();
         response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status200OK);
@@ -75,7 +75,7 @@ public class ListCastMembersApiTest : IDisposable
         await _fixture.Persistence.InsertList(examples);
 
         var (response, output) = await _fixture.ApiClient
-                                               .Get<TestApiResponseList<CastMemberModelOutput>>("castMembers",
+                                               .Get<TestApiResponseList<CastMemberModelOutput>>("cast_members",
                                                 new ListCastMembersInput(page, perPage, "", ""));
 
         response.Should().NotBeNull();
@@ -109,7 +109,7 @@ public class ListCastMembersApiTest : IDisposable
     {
 
         var (response, output) = await _fixture.ApiClient
-                                               .Get<TestApiResponseList<CastMemberModelOutput>>("castMembers");
+                                               .Get<TestApiResponseList<CastMemberModelOutput>>("cast_members");
 
         response.Should().NotBeNull();
         response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status200OK);
@@ -157,7 +157,7 @@ public class ListCastMembersApiTest : IDisposable
         await _fixture.Persistence.InsertList(castMembers);
 
         var (response, output) = await _fixture.ApiClient
-                                               .Get<TestApiResponseList<CastMemberModelOutput>>("castMembers",
+                                               .Get<TestApiResponseList<CastMemberModelOutput>>("cast_members",
                                                 new ListCastMembersInput(page, perPage, search, ""));
 
         response.Should().NotBeNull();
@@ -205,7 +205,7 @@ public class ListCastMembersApiTest : IDisposable
         var searchOrder = order.ToLower() == "asc" ? SearchOrder.ASC : SearchOrder.DESC;
 
         var (response, output) = await _fixture.ApiClient
-                                               .Get<TestApiResponseList<CastMemberModelOutput>>("castMembers",
+                                               .Get<TestApiResponseList<CastMemberModelOutput>>("cast_members",
                                                 new ListCastMembersInput(1, 10, "", orderBy, searchOrder));
 
         response.Should().NotBeNull();

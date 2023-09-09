@@ -83,7 +83,7 @@ public class CreateGenreTest
         var input = _fixture.GetExampleInput();
 
         
-        input.CategoriesIds = exampleCategories
+        input.CategoriesId = exampleCategories
                                     .Select(category => category.Id)
                                     .ToList();
 
@@ -107,13 +107,13 @@ public class CreateGenreTest
         output.Name.Should().Be(input.Name);
         output.IsActive.Should().Be(input.IsActive);
         output.CreatedAt.Should().NotBe(default(DateTime));
-        output.Categories.Should().HaveCount(input.CategoriesIds.Count);
+        output.Categories.Should().HaveCount(input.CategoriesId.Count);
 
         output.Categories
               .Select(relation => relation.Id)
               .ToList()
               .Should()
-              .BeEquivalentTo(input.CategoriesIds);
+              .BeEquivalentTo(input.CategoriesId);
 
         var assertDbContext = _fixture.CreateDbContext(true);
 
@@ -131,13 +131,13 @@ public class CreateGenreTest
                                     .Where(x => x.GenreId == genreDb.Id)
                                     .ToListAsync();
 
-        relations.Should().HaveCount(input.CategoriesIds.Count);
+        relations.Should().HaveCount(input.CategoriesId.Count);
 
         relations
                 .Select(relation => relation.CategoryId)
                 .ToList()
                 .Should()
-                .BeEquivalentTo(input.CategoriesIds);
+                .BeEquivalentTo(input.CategoriesId);
 
     }
 
@@ -156,13 +156,13 @@ public class CreateGenreTest
 
         var input = _fixture.GetExampleInput();
 
-        input.CategoriesIds = exampleCategories
+        input.CategoriesId = exampleCategories
                                     .Select(category => category.Id)
                                     .ToList();
         
         var randomGuid = Guid.NewGuid();
 
-        input.CategoriesIds.Add(randomGuid);
+        input.CategoriesId.Add(randomGuid);
 
         var actDbContext = _fixture.CreateDbContext(true);
 

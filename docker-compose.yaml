@@ -70,9 +70,10 @@ services:
         volumes:
             - .docker/keycloak:/opt/keycloak/data/import
         ports:
-            - 8443:8080
+            #- 8443:8080
+            - 8080:8080
         command:
-            - start-dev --import-realm
+            - start-dev --import-realm --hostname-url=http://keycloak:8080
         depends_on:
             - fc.codeflix.catalog.db
         networks:

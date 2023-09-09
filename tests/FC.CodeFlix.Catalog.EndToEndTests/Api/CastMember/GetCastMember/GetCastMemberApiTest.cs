@@ -31,7 +31,7 @@ public class GetCastMemberApiTest: IDisposable
 
         var (response, output) = await _fixture
                             .ApiClient
-                            .Get<ApiResponse<CastMemberModelOutput>>($"castMembers/{example.Id}");
+                            .Get<ApiResponse<CastMemberModelOutput>>($"cast_members/{example.Id}");
 
         response.Should().NotBeNull();
         response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status200OK);
@@ -51,7 +51,7 @@ public class GetCastMemberApiTest: IDisposable
 
         var (response, output) = await _fixture
                             .ApiClient
-                            .Get<ProblemDetails>($"castMembers/{randomGuid}");
+                            .Get<ProblemDetails>($"cast_members/{randomGuid}");
 
         response.Should().NotBeNull();
         response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status404NotFound);
