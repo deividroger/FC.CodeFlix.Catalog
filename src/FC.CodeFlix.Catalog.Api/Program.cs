@@ -32,7 +32,9 @@ app.UseDocumentation();
 
 
 //app.UseHttpsRedirection();
+
 app.UseCors("CORS");
+
 app.UseAuthentication();
 app.UseAuthorization();
 
