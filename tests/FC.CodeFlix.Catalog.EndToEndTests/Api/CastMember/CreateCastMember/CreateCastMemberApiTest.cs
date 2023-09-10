@@ -53,7 +53,7 @@ public class CreateCastMemberApiTest: IDisposable
 
         var (response, output) = await _fixture
                                            .ApiClient
-                                           .Post<ProblemDetails>("castMembers",
+                                           .Post<ProblemDetails>("cast_members",
                                                 new CreateCastMemberInput(string.Empty, example.Type));
         response.Should().NotBeNull();
         response!.StatusCode.Should().Be((HttpStatusCode)StatusCodes.Status422UnprocessableEntity);
